@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Inputs
 {
@@ -7,9 +8,12 @@ namespace Inputs
         public static InputManager Instance;
 
         public Vector2 Movement;
-        
+
+        public delegate void InputActionDelegate();
+        public static event InputActionDelegate OnMouseDown;
+
         private InputActions _inputs;
-        
+
         #region UnityFunctions
 
         private void Awake()
@@ -21,11 +25,15 @@ namespace Inputs
         private void OnEnable()
         {
             _inputs.Player.Enable();
+
+            _inputs.Player.MouseDown.performed += MouseDown;
         }
 
         private void OnDisable()
         {
             _inputs.Player.Disable();
+            
+            _inputs.Player.MouseDown.performed -= MouseDown;
         }
 
         private void FixedUpdate()
@@ -35,9 +43,10 @@ namespace Inputs
 
         #endregion
 
-        // #region EventInvokers
-        //
-        //
-        // #endregion
+        #region EventInvokers
+
+        private static void MouseDown(InputAction.CallbackContext context) { OnMouseDown?.Invoke(); }
+
+    #endregion
     }
 }
