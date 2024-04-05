@@ -8,9 +8,12 @@ namespace Player
     {
         [Header("Components")] 
         public Camera PlayerCamera;
+        public Transform MeleeCentre;
+        [HideInInspector] public Animator Animator;
         
         [Header("Player Settings")]
         public float HitPoints;
+        public float MeleeRadius;
         
         private IPlayerSpellState _currentState;
         private float _prevAngle;
@@ -22,7 +25,8 @@ namespace Player
 
         private void Awake()
         {
-            _currentState = _arcaneWeapon;   
+            _currentState = _arcaneWeapon;
+            Animator = GetComponent<Animator>();
         }
 
         private void Update()
@@ -52,9 +56,9 @@ namespace Player
             _currentState.OnStart(this);
         }
 
-        public void OnDamaged()
+        public void OnDamaged(int damage)
         {
-            _currentState.OnDamaged(this);
+            _currentState.OnDamaged(this, damage);
         }
 
         #endregion
