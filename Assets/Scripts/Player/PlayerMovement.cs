@@ -1,18 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
+using Inputs;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+namespace Player
 {
-    
-    void Start()
+    public class PlayerMovement : MonoBehaviour
     {
+        public float Speed;
         
-    }
+        #region UnityFunctions
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        private void FixedUpdate()
+        {
+            var Transform = transform;
+            var currentPosition = Transform.position;
+            var movementVector = InputManager.Instance.Movement * (Speed * Time.deltaTime);
+            currentPosition = new Vector3(currentPosition.x + movementVector.x, currentPosition.y, currentPosition.z + movementVector.y);
+            Transform.position = currentPosition;
+        }
+
+        #endregion
     }
 }

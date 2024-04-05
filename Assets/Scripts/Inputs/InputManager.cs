@@ -31,7 +31,6 @@ namespace Inputs
         private void FixedUpdate()
         {
             Movement = _inputs.Player.Movement.ReadValue<Vector2>();
-            Debug.Log(Movement);
         }
 
         #endregion
