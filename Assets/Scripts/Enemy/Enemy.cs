@@ -85,6 +85,8 @@ public class Enemy : MonoBehaviour
         if (attackTimer > attackCooldown)
         {
             //print(gameObject.name + " attacks!");
+            
+            player.GetComponent<Player.PlayerManager>().OnDamaged();
         }
         else
         {
@@ -134,7 +136,7 @@ public class Enemy : MonoBehaviour
     }
     void TargetUpdate()
     {
-        //this randomly sets the enemies target to either be the player or one of 4 "ghost" opbjects that are children
+        //this randomly sets the enemies target to either be the player or one of 4 "ghost" objects that are children
         //of the player, this helps to stop all the clumping together of the large number of enemies somewhat
 
         int randomIndex = Random.Range(0, 5);
