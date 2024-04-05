@@ -4,14 +4,21 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    int health;
-    [SerializeField]float speed;
-    int damage;
-    [SerializeField] float attackCooldown;
-    float timer;
-    GameObject target;
-    Vector3 position;
-    bool isAlive = true;
+    //stats
+    public int health;
+    public float speed;
+    public int damage;
+    public float attackCooldown;
+
+    private float attackTimer;
+    private float targetUpdateTimer;
+
+    private GameObject target;
+    private GameObject player;
+    private Vector3 position;
+    private Vector3 move;
+
+    private bool isAlive = true;
 
     public enum State
     {
@@ -23,11 +30,24 @@ public class Enemy : MonoBehaviour
     private State currentState;
     void Start()
     {
+        player = target;
+        TargetUpdate();
         currentState = State.Idle;
     }
     void Update()
     {
         position = transform.position;
+
+        //every 5 seconds change to a new target between the ghosts and the player 
+        if (targetUpdateTimer >= 1)
+        {
+            TargetUpdate();
+            targetUpdateTimer = 0;
+        }
+        else
+        {
+            targetUpdateTimer += Time.deltaTime;
+        }
 
         switch (currentState)
         {
@@ -52,20 +72,23 @@ public class Enemy : MonoBehaviour
     }
     private void Move()
     {
+       
         //move towards the target (the player) by step each frame
         var step = speed * Time.deltaTime;
-        var move = Vector3.MoveTowards(position, target.transform.position, step);
+        move = Vector3.MoveTowards(position, target.transform.position, step);
         transform.position = move;
+       
+        
     }
     private void Attack()
     {
-        if (timer > attackCooldown)
+        if (attackTimer > attackCooldown)
         {
-            print(gameObject.name + " attacks!");
+            //print(gameObject.name + " attacks!");
         }
         else
         {
-            timer += Time.deltaTime;
+            attackTimer += Time.deltaTime;
         }
     }
     void Die()
@@ -85,17 +108,44 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == target)
+        switch (other.gameObject.tag)
         {
-            currentState = State.Attack;
+            case "Player":
+                currentState = State.Attack;
+                break;
+            case "Enemy":
+                
+                break;
+
         }
 
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject == target)
+        switch (other.gameObject.tag)
         {
-            currentState = State.Move;
+            case "Player":
+                currentState = State.Move;
+                break;
+            case "Enemy":
+                move *= -1;
+                break;
+        }
+    }
+    void TargetUpdate()
+    {
+        //this randomly sets the enemies target to either be the player or one of 4 "ghost" opbjects that are children
+        //of the player, this helps to stop all the clumping together of the large number of enemies somewhat
+
+        int randomIndex = Random.Range(0, 5);
+        if (randomIndex != 4) //if it equals four, just follow the player as normal
+        {
+            TargetGhost[] ghosts = player.GetComponentsInChildren<TargetGhost>();
+            if (ghosts[randomIndex] != null)
+            {
+                GameObject ghost = ghosts[randomIndex].gameObject;
+                target = ghost;
+            }
         }
     }
 
