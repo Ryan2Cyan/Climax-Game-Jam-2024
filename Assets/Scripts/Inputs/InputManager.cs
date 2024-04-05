@@ -8,6 +8,7 @@ namespace Inputs
         public static InputManager Instance;
 
         public Vector2 Movement;
+        public Vector2 MousePosition;
 
         public delegate void InputActionDelegate();
         public static event InputActionDelegate OnMouseDown;
@@ -39,6 +40,7 @@ namespace Inputs
         private void FixedUpdate()
         {
             Movement = _inputs.Player.Movement.ReadValue<Vector2>();
+            MousePosition = _inputs.Player.MousePosition.ReadValue<Vector2>();
         }
 
         #endregion
