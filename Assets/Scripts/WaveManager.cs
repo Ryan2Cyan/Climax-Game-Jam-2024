@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
-    EnemyManager enemyManager;
+    public static WaveManager Instance;
+    private EnemyManager enemyManager;
 
-    float timer;
-    [SerializeField] float waveInterval;
+    private float timer;
+    public float waveInterval;
     [Range(1, 50)]
-    [SerializeField] int waveSize;
-    int waveCounter;
+    public int waveSize;
+    private int waveCounter;
   
-
+    void Awake()
+    {
+        Instance = this;
+    }
     //The wave manager tells the enemy manager to spawn enemies each wave
     void Start()
     {
