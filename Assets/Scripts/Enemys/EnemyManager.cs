@@ -1,16 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using Enemys;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager Instance;
 
-    [Header("Refrences")]
-    public GameObject enemyPrefab;
-    public GameObject player;
+    [Header("References")]
+    public GameObject EnemyPrefab;
+    public GameObject Player;
 
-    private List<Enemy> enemies = new List<Enemy>();
+    public List<Enemy> Enemies = new List<Enemy>();
 
     [Header("Enemy Types")]
   // EnemyType[] enemyTypes;
@@ -37,12 +39,12 @@ public class EnemyManager : MonoBehaviour
     void Update()
     {
         //check for enemies not beibg alive, and clean them up
-        for (int i = 0; i < enemies.Count; i++)
+        for (int i = 0; i < Enemies.Count; i++)
         {
-            if (!enemies[i].IsAlive())
+            if (!Enemies[i].IsAlive())
             {
-                Destroy(enemies[i].gameObject);
-                enemies.RemoveAt(i);
+                Destroy(Enemies[i].gameObject);
+                Enemies.RemoveAt(i);
             }
         }
        
@@ -63,11 +65,10 @@ public class EnemyManager : MonoBehaviour
        
 
         //spawn the enemy, name it, set the player up as its target, then add to the enemies list
-       var spawnedPrefab = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+       var spawnedPrefab = Instantiate(EnemyPrefab, spawnPos, Quaternion.identity);
        Enemy spawnedEnemy = spawnedPrefab.GetComponent<Enemy>();
-       spawnedEnemy.name = "Enemy" + (enemies.Count + 1);
-       spawnedEnemy.setTarget(player);
-       enemies.Add(spawnedEnemy);
+       spawnedEnemy.name = "Enemy" + (Enemies.Count + 1);
+       Enemies.Add(spawnedEnemy);
     }
     void DetermineSpawnLocation()
     {

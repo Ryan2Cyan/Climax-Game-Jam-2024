@@ -23,7 +23,7 @@ namespace Player
 
             public void OnStart(PlayerManager player)
             {
-          
+                
             }
 
             public void OnUpdate(PlayerManager player)
@@ -35,13 +35,13 @@ namespace Player
             {
                 if(_cooldownTimer > 0f) return;
                 player.Animator.SetTrigger(ArcaneWeapon);
-                // foreach (var enemy in EnemyManager.Instance.enemies)
-                // {
-                //     var distance = Vector3.Distance(enemy.transform.position, player.MeleeCentre.position);
-                //     if (distance > player.MeleeRadius) return;
-                //     enemy.Damage(_damageOnHit);
-                //     _cooldownTimer = _hitCooldown;
-                // }
+                foreach (var enemy in EnemyManager.Instance.Enemies)
+                {
+                    var distance = Vector3.Distance(enemy.transform.position, player.MeleeCentre.position);
+                    if (distance > player.MeleeRadius) return;
+                    enemy.OnDamage(_damageOnHit);
+                    _cooldownTimer = _hitCooldown;
+                }
             }
 
             public void OnDamaged(PlayerManager player, int damage)

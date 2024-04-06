@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Inputs;
 using UnityEngine;
 using static Player.PlayerStates;
@@ -6,9 +7,12 @@ namespace Player
 {
     public class PlayerManager : MonoBehaviour
     {
+        public static PlayerManager Instance;
+        
         [Header("Components")] 
         public Camera PlayerCamera;
         public Transform MeleeCentre;
+        public List<GameObject> Ghosts = new();
         [HideInInspector] public Animator Animator;
         
         [Header("Player Settings")]
@@ -25,6 +29,7 @@ namespace Player
 
         private void Awake()
         {
+            Instance = this;
             _currentState = _arcaneWeapon;
             Animator = GetComponent<Animator>();
         }
