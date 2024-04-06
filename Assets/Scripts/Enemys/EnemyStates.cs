@@ -98,6 +98,16 @@ namespace Enemys
                 }
                
             }
+            else if (enemy.explodeOnDeath)
+            {
+                if (_attackTimer > enemy.AttackCooldown)
+                {
+                    enemy.SetState(enemy.DeathEnemyState);
+                    _attackTimer = 0f;
+                
+                }
+                else _attackTimer += Time.deltaTime;
+            }
             else
             {
                 if (_attackTimer > enemy.AttackCooldown)
@@ -121,9 +131,25 @@ namespace Enemys
    {
        public void OnStart(Enemy enemy)
        {
-           if(enemy.EnableDebug) Debug.Log("Enemy (" + enemy.gameObject.name + "): Death");
-           enemy.IsAlive = false;
-           EnemyManager.Instance.DespawnEnemy(enemy);
+            if (enemy.EnableDebug) Debug.Log("Enemy (" + enemy.gameObject.name + "): Death");
+            if (enemy.explodeOnDeath)
+            {
+                var playerPos = PlayerManager.Instance.transform.position;
+                if (Vector3.Distance(playerPos, enemy.transform.position) < enemy.explosionRadius)
+                {
+                    PlayerManager.Instance.OnDamaged(enemy.Damage);
+                    Debug.Log("HIT PLAYER!");
+                }
+                enemy.IsAlive = false;
+                EnemyManager.Instance.DespawnEnemy(enemy);
+            }
+            else
+            {
+                enemy.IsAlive = false;
+                EnemyManager.Instance.DespawnEnemy(enemy);
+            }
+           
+          
        }
 
        public void OnUpdate(Enemy enemy)

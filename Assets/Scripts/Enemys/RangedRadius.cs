@@ -32,7 +32,6 @@ public class RangedRadius : MonoBehaviour
             case "Player":
                 {
                     playerInRange = false;
-                    print("Can see player");
                 }
                 break;
 

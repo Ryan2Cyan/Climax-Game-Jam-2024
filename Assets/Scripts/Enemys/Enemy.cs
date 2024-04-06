@@ -19,6 +19,7 @@ namespace Enemys
         public bool EnableDebug = true;
         public bool isRanged;
         public bool explodeOnDeath;
+        public float explosionRadius;
 
         [Header("Settings")]
         public Material DefaultMaterial;
@@ -35,7 +36,6 @@ namespace Enemys
         public readonly DeathEnemyState DeathEnemyState = new();
 
         public RangedRadius rangeRadius;
-        public Collider explosionRadius;
         public GameObject bullet;
         public ObjectPool bulletPool;
         public List<Bullet> bullets = new ();
@@ -174,6 +174,7 @@ namespace Enemys
             Damage = newEnemyType.damage;
             isRanged = newEnemyType.isRanged;
             explodeOnDeath = newEnemyType.explodeOnDeath;
+            explosionRadius = newEnemyType.explosionRadius;
 
             CurrentHealth = MaxHealth;
 
