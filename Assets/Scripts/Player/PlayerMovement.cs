@@ -8,7 +8,8 @@ namespace Player
         [Header("Settings")]
         public float Speed;
         public float Smoothing = 1f;
-        
+
+        private Vector3 _velocity;
         #region UnityFunctions
 
         private void FixedUpdate()
@@ -16,7 +17,7 @@ namespace Player
             var playerPosition = transform.position;
             var movementVector = InputManager.Instance.Movement * (Speed * Time.deltaTime);
             var desiredPosition = new Vector3(playerPosition.x + movementVector.x, playerPosition.y, playerPosition.z + movementVector.y);
-            transform.position = Vector3.Lerp(playerPosition, desiredPosition, Smoothing * Time.deltaTime);
+            transform.position = Vector3.SmoothDamp(playerPosition, desiredPosition, ref _velocity, Smoothing * Time.deltaTime);
         }
 
         #endregion
