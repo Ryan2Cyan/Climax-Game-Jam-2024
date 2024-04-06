@@ -17,6 +17,8 @@ namespace General
         public float MaxWave = 100f;
         public float MaximumWaveDuration = 100f;
         public float MaximumWaveSpawnPoints = 100f;
+        [Range(1,10)]
+        public int WaveStrengthModifier = 1;
         public bool DebugActive;
         [HideInInspector] public int CurrentWave;
 
@@ -46,6 +48,20 @@ namespace General
         #endregion
 
         #region PublicFunctions
+
+
+        public void ToggleActive(bool active)
+        {
+            _active = active;
+            if (active) StartCoroutine(_waveCounterCoroutine = WaveCountTimer());
+        }
+
+        public void StartWave()
+        {
+            OnWaveStart?.Invoke();
+            EnemyManager.Instance.SpawnEnemies(_currentSpawnPoints * WaveStrengthModifier, _currentWaveDuration);
+        }
+
         
         public void Reset()
         {
@@ -57,19 +73,6 @@ namespace General
         #endregion
 
         #region PrivateFunctions
-
-        private void ToggleActive(bool active)
-        {
-            _active = active;
-            if (active) StartCoroutine(_waveCounterCoroutine = WaveCountTimer());
-        }
-
-        private void StartWave()
-        {
-            OnWaveStart?.Invoke();
-            EnemyManager.Instance.SpawnEnemies(_currentSpawnPoints, _currentWaveDuration);
-        }
-        
         /// <summary> After each wave, we can adjust the number of enemies each wave will spawn. </summary>
         private void UpdateWaveParamaters()
         {

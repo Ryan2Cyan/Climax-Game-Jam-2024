@@ -12,6 +12,7 @@ namespace Player
         [Header("Components")] 
         public Transform MeleeCentre;
         public List<GameObject> Ghosts = new();
+        public PlayerCamera PlayerCameraScript;
         [HideInInspector] public Animator Animator;
         [HideInInspector] public CursorWorldRaycast CursorWorldRaycastScript;
         
