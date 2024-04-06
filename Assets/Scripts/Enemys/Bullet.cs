@@ -49,7 +49,6 @@ public class Bullet : MonoBehaviour, IPooledObject
         {
             case "Player":
                 {
-                    print("Hit!");
                     PlayerManager.Instance.OnDamaged(damage);
                 }
                 break;
