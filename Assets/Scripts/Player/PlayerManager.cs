@@ -17,8 +17,8 @@ namespace Player
         
         [Header("Player Settings")]
         public int MaxHealth = 200;
-        public float MovementSmoothTime = 1f;
         public float MeleeRadius;
+        public float RotationSpeed;
         
         [HideInInspector] public float CurrentHealth;
 
@@ -27,6 +27,8 @@ namespace Player
         private IPlayerSpellState _currentState;
         private float _prevAngle;
         
+        private Vector3 _targetDirection;
+        private float _rotateStartTime;
         
         // Player states:
         private readonly ArcaneWeaponPlayerState _arcaneWeapon = new();
@@ -45,6 +47,7 @@ namespace Player
         {
             _currentState.OnUpdate(this);
             FaceCursorDirection();
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(_targetDirection), Time.deltaTime * RotationSpeed);
         }
 
         private void OnEnable()
@@ -93,14 +96,11 @@ namespace Player
             // Convert mouse position from screen to world space:
             var mousePosition = InputManager.Instance.MousePosition;
             if (mousePosition == _previousMousePosition) return; 
-            var lookPosition = PlayerCamera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 10f));
+            var lookPosition = PlayerCamera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 100f));
             
             // Get direction to the world-space mouse position:
             var direction = lookPosition - transform.position;
-            direction = new Vector3(direction.x, 0f, direction.z).normalized;
-            
-            transform.rotation = Quaternion.LookRotation(direction);
-            _previousMousePosition = mousePosition;
+            _targetDirection = new Vector3(direction.x, 0f, direction.z).normalized;
         }
 
         #endregion

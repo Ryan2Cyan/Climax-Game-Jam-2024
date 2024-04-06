@@ -34,7 +34,7 @@ public class WaveManager : MonoBehaviour
        
         if (timer >= waveInterval)
         {
-            enemyManager.SpawnWave(waveSize);
+            // enemyManager.SpawnWave(waveSize);
             waveCounter++;
             print("WAVE " + waveCounter + " START!");
             UpdateWaveParamaters();

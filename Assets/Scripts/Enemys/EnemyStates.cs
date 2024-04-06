@@ -62,6 +62,7 @@ namespace Enemys
        {
            if(enemy.EnableDebug) Debug.Log("Enemy (" + enemy.gameObject.name + "): Death");
            enemy.IsAlive = false;
+           EnemyManager.Instance.DespawnEnemy(enemy);
        }
 
        public void OnUpdate(Enemy enemy)

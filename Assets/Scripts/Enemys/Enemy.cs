@@ -1,11 +1,12 @@
 using System.Collections;
+using General;
 using Player;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Enemys
 {
-    public class Enemy : MonoBehaviour
+    public class Enemy : MonoBehaviour, IPooledObject
     {
         [Header("Settings")]
         public int MaxHealth = 250;
@@ -35,20 +36,7 @@ namespace Enemys
         private readonly DeathEnemyState _deathEnemyState = new();
         
         #region UnityFunctions
-
-        private void Start()
-        {
-            TargetUpdate();
-            _currentState = _moveEnemyState;
-            CurrentHealth = MaxHealth;
-            CurrentTarget = PlayerManager.Instance.transform;
-            
-            // Create a new instance of mesh renderer's material:
-            _meshRenderer = GetComponent<MeshRenderer>();
-            var material = _meshRenderer.material;
-            _meshRenderer.material = new Material(material);
-        }
-
+        
         private void Update()
         {
             TargetUpdate();
@@ -95,6 +83,26 @@ namespace Enemys
             _currentState = state;
             _currentState.OnStart(this);
         }
+        
+        public void Instantiate()
+        {
+            gameObject.SetActive(true);
+            TargetUpdate();
+            _currentState = _moveEnemyState;
+            CurrentHealth = MaxHealth;
+            CurrentTarget = PlayerManager.Instance.transform;
+            
+            // Create a new instance of mesh renderer's material:
+            _meshRenderer = GetComponent<MeshRenderer>();
+            var material = _meshRenderer.material;
+            _meshRenderer.material = new Material(material);
+        }
+
+        public void Release()
+        {
+            gameObject.SetActive(false);
+        }
+        
         #endregion
 
         #region PrivateFunctions

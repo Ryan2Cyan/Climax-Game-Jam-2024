@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using General;
 using UnityEngine;
 
 namespace Enemys
@@ -10,51 +12,58 @@ namespace Enemys
         public static EnemyManager Instance;
 
         [Header("References")]
-        public GameObject EnemyPrefab;
-        public List<Enemy> Enemies = new();
+        public ObjectPool EnemyPool;
+        public List<Enemy> AllEnemies = new();
 
         [Header("Enemy Types")]
         // EnemyType[] enemyTypes;
-
-
+        
         [Header("Settings")]
         public Vector2 MapBounds;
         private Vector2 _spawnExtent;
         private int _spawnedEnemies;
+        private IEnumerator _spawnCoroutine;
+
+
+        #region UnityFunctions
 
         private void Awake()
         {
             Instance = this;
-            // To get the radius and not the diameter:
             _spawnExtent = MapBounds / 2;
         }
+
+        #endregion
+
+        #region PublicFunctions
 
         [ContextMenu("SpawnWave")]
         public void Spawn10()
         {
-            SpawnWave(3);
+            SpawnWave(3, 10f);
         }
         
-        public void SpawnWave(int spawnAmount)
+        public void SpawnWave(int spawnAmount, float waveDuration)
         {
-       
-            while (_spawnedEnemies < spawnAmount)
-            {
-                // ToDo: Replace with pooling:
-                Spawn();
-                _spawnedEnemies++;
-            }
-            _spawnedEnemies = 0;
+            if(_spawnCoroutine != null) StopCoroutine(_spawnCoroutine);
+            StartCoroutine(_spawnCoroutine = SpawnEnemies(spawnAmount, waveDuration));
         }
 
+        public void DespawnEnemy(Enemy enemy)
+        {
+            EnemyPool.ReleasePooledObject(enemy);    
+        }
+        
+        #endregion
+
+        #region PrivateFunctions
+        
         /// <summary> Spawn the enemy, name it, set the player up as its target, then add to the enemies list. </summary>
         private void Spawn()
         {
-            // ToDo: Replace with pooling:
-            var spawnedPrefab = Instantiate(EnemyPrefab, DetermineSpawnLocation(), Quaternion.identity);
-            var spawnedEnemy = spawnedPrefab.GetComponent<Enemy>();
-            spawnedEnemy.name = "Enemy" + (Enemies.Count + 1);
-            Enemies.Add(spawnedEnemy);
+            var enemy = (Enemy)EnemyPool.GetPooledObject();
+            if(EnemyPool.NewObjectAdded) AllEnemies.Add(enemy);
+            enemy.transform.position = DetermineSpawnLocation();
         }
 
         /// <summary> Spawn enemies either north, south, east, or west, then random the other coordinate within the
@@ -84,11 +93,32 @@ namespace Enemys
             }
             return spawnPosition;
         }
+
+        private IEnumerator SpawnEnemies(int amountToSpawn, float waveDuration)
+        {
+            var timePerSpawn = waveDuration / amountToSpawn;
+            var elapsedTime = timePerSpawn;
+            var spawnedEnemies = amountToSpawn;
+            while (spawnedEnemies > 0)
+            {
+                elapsedTime -= Time.deltaTime;
+                if (elapsedTime < 0f)
+                {
+                    elapsedTime = timePerSpawn;
+                    spawnedEnemies -= 1;
+                    Spawn();
+                }
+                yield return null;
+            }
+            yield return null;
+        }
         
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireCube( Vector3.zero, new Vector3(MapBounds.x, 0f, MapBounds.y));
         }
+        
+        #endregion
     }
 }
