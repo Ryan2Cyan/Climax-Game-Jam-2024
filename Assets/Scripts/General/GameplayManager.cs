@@ -6,6 +6,7 @@ namespace General
     public class GameplayManager : MonoBehaviour
     {
         public static GameplayManager Instance;
+        public GameplayState StartingState;
         public bool Paused;
         public bool DebugActive;
 
@@ -30,8 +31,6 @@ namespace General
             GameOver = 6
         }
         
-        
-        
         #region UnityFunctions
 
         private void Awake()
@@ -39,8 +38,18 @@ namespace General
             DontDestroyOnLoad(this);
             Instance = this;
             Paused = false;
-            _currentState = BootingUpState;
-            _currentState.OnStart(this);
+
+            _currentState = StartingState switch
+            {
+                GameplayState.BootingUp => BootingUpState,
+                GameplayState.MainMenu => MainMenuState,
+                GameplayState.Settings => SettingsState,
+                GameplayState.Start => StartState,
+                GameplayState.Playing => PlayState,
+                GameplayState.Pause => PauseState,
+                GameplayState.GameOver => GameOverState,
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
 
         #endregion
@@ -91,9 +100,11 @@ namespace General
         
         public void SetState(IGameplayState state)
         {
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded -= _currentState.OnSceneLoaded;
             _currentState.OnEnd(this);
             _currentState = state;
             _currentState.OnStart(this);
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded += _currentState.OnSceneLoaded;
         }
 
         #endregion

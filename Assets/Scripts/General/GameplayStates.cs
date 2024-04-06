@@ -1,4 +1,6 @@
+using Player;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace General
 {
@@ -7,6 +9,7 @@ namespace General
         public void OnStart(GameplayManager gameplayManager);
         public void OnUpdate(GameplayManager gameplayManager);
         public void OnEnd(GameplayManager gameplayManager);
+        void OnSceneLoaded(Scene scene, LoadSceneMode mode);
     }
     
     public class BootingUpGameplayState : IGameplayState
@@ -22,6 +25,11 @@ namespace General
         }
 
         public void OnEnd(GameplayManager gameplayManager)
+        {
+            
+        }
+
+        public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             
         }
@@ -44,6 +52,11 @@ namespace General
         {
             
         }
+
+        public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            
+        }
     }
     
     public class SettingsGameplayState : IGameplayState
@@ -59,6 +72,11 @@ namespace General
         }
 
         public void OnEnd(GameplayManager gameplayManager)
+        {
+            
+        }
+
+        public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             
         }
@@ -79,7 +97,12 @@ namespace General
 
         public void OnEnd(GameplayManager gameplayManager)
         {
-            
+            PlayerManager.Instance.PlayerCameraScript.enabled = true;            
+        }
+
+        public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            PlayerManager.Instance.PlayerCameraScript.enabled = false;
         }
     }
     
@@ -96,6 +119,11 @@ namespace General
         }
 
         public void OnEnd(GameplayManager gameplayManager)
+        {
+            PlayerManager.Instance.PlayerCameraScript.enabled = true;
+        }
+
+        public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             
         }
@@ -117,6 +145,11 @@ namespace General
         {
             
         }
+
+        public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            
+        }
     }
     
     public class GameOverGameplayState : IGameplayState
@@ -132,6 +165,11 @@ namespace General
         }
 
         public void OnEnd(GameplayManager gameplayManager)
+        {
+            
+        }
+
+        public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             
         }
