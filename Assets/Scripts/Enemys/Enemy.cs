@@ -25,15 +25,17 @@ namespace Enemys
         [HideInInspector] public float CurrentHealth;
         [HideInInspector] public bool IsAlive = true;
         
+        public readonly MoveEnemyState SpawnEnemyState = new();
+        public readonly MoveEnemyState MoveEnemyState = new();
+        public readonly AttackEnemyState AttackEnemyState = new();
+        public readonly DeathEnemyState DeathEnemyState = new();
+        
         private float _targetUpdateTimer;
         private MeshRenderer _meshRenderer;
         private IEnumerator _currentCoroutine;
 
         // States:
         private IEnemyState _currentState;
-        private readonly MoveEnemyState _moveEnemyState = new();
-        private readonly AttackEnemyState _attackEnemyState = new();
-        private readonly DeathEnemyState _deathEnemyState = new();
         
         #region UnityFunctions
         
@@ -49,7 +51,7 @@ namespace Enemys
             {
                 case "Player":
                 {
-                    SetState(_attackEnemyState);
+                    SetState(AttackEnemyState);
                 } break;
                 case "Enemy":
                 {
@@ -64,7 +66,7 @@ namespace Enemys
             {
                 case "Player":
                 {
-                    SetState(_moveEnemyState);
+                    SetState(MoveEnemyState);
                 }break;
                 case "Enemy":
                 {
@@ -88,7 +90,7 @@ namespace Enemys
         {
             gameObject.SetActive(true);
             TargetUpdate();
-            _currentState = _moveEnemyState;
+            _currentState = SpawnEnemyState;
             CurrentHealth = MaxHealth;
             CurrentTarget = PlayerManager.Instance.transform;
             
@@ -111,7 +113,7 @@ namespace Enemys
         {
             if(EnableDebug) Debug.Log("Enemy (" + gameObject.name + "): Damaged");
             CurrentHealth -= damage;
-            if (CurrentHealth <= 0) SetState(_deathEnemyState);
+            if (CurrentHealth <= 0) SetState(DeathEnemyState);
             else
             {
                 if(_currentCoroutine != null) StopCoroutine(_currentCoroutine);

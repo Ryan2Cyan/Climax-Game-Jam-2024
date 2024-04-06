@@ -3,58 +3,56 @@ using UnityEngine;
 
 namespace Player
 {
-    public abstract class PlayerStates
+    public interface IPlayerSpellState
     {
-        private static readonly int ArcaneWeapon = Animator.StringToHash("ArcaneWeapon");
+        public void OnStart(PlayerManager player);
+        public void OnUpdate(PlayerManager player);
+        public void OnAttack(PlayerManager player);
+        public void OnDamaged(PlayerManager player, int damage);
+        public void OnEnd(PlayerManager player);
+    }
 
-        public interface IPlayerSpellState
+    public class ArcaneWeaponPlayerState : IPlayerSpellState
+    {
+        private const int _damageOnHit = 10;
+        private const float _hitCooldown = 0.5f;
+        private float _cooldownTimer;
+
+        private static readonly int ArcaneWeapon = Animator.StringToHash("ArcaneWeapon");
+        
+        public void OnStart(PlayerManager player)
         {
-            public void OnStart(PlayerManager player);
-            public void OnUpdate(PlayerManager player);
-            public void OnAttack(PlayerManager player);
-            public void OnDamaged(PlayerManager player, int damage);
-            public void OnEnd(PlayerManager player);
+            
         }
 
-        public class ArcaneWeaponPlayerState : IPlayerSpellState
+        public void OnUpdate(PlayerManager player)
         {
-            private const int _damageOnHit = 10;
-            private const float _hitCooldown = 0.5f;
-            private float _cooldownTimer;
+            _cooldownTimer -= Time.deltaTime;
+        }
 
-            public void OnStart(PlayerManager player)
+        public void OnAttack(PlayerManager player)
+        {
+            if(_cooldownTimer > 0f) return;
+            player.Animator.SetTrigger(ArcaneWeapon);
+            foreach (var enemy in EnemyManager.Instance.AllEnemies)
             {
-                
+                var distance = Vector3.Distance(enemy.transform.position, player.MeleeCentre.position);
+                if (distance > player.MeleeRadius) continue;
+                enemy.OnDamage(_damageOnHit);
+                _cooldownTimer = _hitCooldown;
             }
+        }
 
-            public void OnUpdate(PlayerManager player)
-            {
-                _cooldownTimer -= Time.deltaTime;
-            }
+        public void OnDamaged(PlayerManager player, int damage)
+        {
+            player.CurrentHealth -= damage;
+            if (player.CurrentHealth <= 0) player.OnDeath();
+        }
 
-            public void OnAttack(PlayerManager player)
-            {
-                if(_cooldownTimer > 0f) return;
-                player.Animator.SetTrigger(ArcaneWeapon);
-                foreach (var enemy in EnemyManager.Instance.AllEnemies)
-                {
-                    var distance = Vector3.Distance(enemy.transform.position, player.MeleeCentre.position);
-                    if (distance > player.MeleeRadius) continue;
-                    enemy.OnDamage(_damageOnHit);
-                    _cooldownTimer = _hitCooldown;
-                }
-            }
-
-            public void OnDamaged(PlayerManager player, int damage)
-            {
-                player.CurrentHealth -= damage;
-                if (player.CurrentHealth <= 0) player.OnDeath();
-            }
-
-            public void OnEnd(PlayerManager player)
-            {
-          
-            }
+        public void OnEnd(PlayerManager player)
+        {
+      
         }
     }
+    
 }

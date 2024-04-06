@@ -40,13 +40,13 @@ namespace Enemys
         [ContextMenu("SpawnWave")]
         public void Spawn10()
         {
-            SpawnWave(3, 10f);
+            SpawnEnemies(3, 10f);
         }
         
-        public void SpawnWave(int spawnAmount, float waveDuration)
+        public void SpawnEnemies(int spawnAmount, float waveDuration)
         {
             if(_spawnCoroutine != null) StopCoroutine(_spawnCoroutine);
-            StartCoroutine(_spawnCoroutine = SpawnEnemies(spawnAmount, waveDuration));
+            StartCoroutine(_spawnCoroutine = SpawnEnemiesCoroutine(spawnAmount, waveDuration));
         }
 
         public void DespawnEnemy(Enemy enemy)
@@ -94,7 +94,7 @@ namespace Enemys
             return spawnPosition;
         }
 
-        private IEnumerator SpawnEnemies(int amountToSpawn, float waveDuration)
+        private IEnumerator SpawnEnemiesCoroutine(int amountToSpawn, float waveDuration)
         {
             var timePerSpawn = waveDuration / amountToSpawn;
             var elapsedTime = timePerSpawn;

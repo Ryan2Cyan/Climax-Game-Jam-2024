@@ -9,7 +9,27 @@ namespace Enemys
        public void OnUpdate(Enemy enemy);
        public void OnEnd(Enemy enemy);
    }
-   
+
+    public class SpawnEnemyState : IEnemyState
+    {
+        public void OnStart(Enemy enemy)
+        {
+            // All code related to spawning new enemy type:
+         
+            
+            enemy.SetState(enemy.MoveEnemyState);
+        }
+
+        public void OnUpdate(Enemy enemy)
+        {
+    
+        }
+
+        public void OnEnd(Enemy enemy)
+        {
+        }
+    } 
+    
    public class MoveEnemyState : IEnemyState
    {
        public void OnStart(Enemy enemy)
