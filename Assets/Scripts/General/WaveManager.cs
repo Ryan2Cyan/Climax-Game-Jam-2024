@@ -49,6 +49,7 @@ namespace General
 
         #region PublicFunctions
 
+
         public void ToggleActive(bool active)
         {
             _active = active;
@@ -60,6 +61,7 @@ namespace General
             OnWaveStart?.Invoke();
             EnemyManager.Instance.SpawnEnemies(_currentSpawnPoints * WaveStrengthModifier, _currentWaveDuration);
         }
+
         
         public void Reset()
         {
@@ -72,6 +74,18 @@ namespace General
 
         #region PrivateFunctions
 
+        private void ToggleActive(bool active)
+        {
+            _active = active;
+            if (active) StartCoroutine(_waveCounterCoroutine = WaveCountTimer());
+        }
+
+        private void StartWave()
+        {
+            OnWaveStart?.Invoke();
+            EnemyManager.Instance.SpawnEnemies(_currentSpawnPoints, _currentWaveDuration);
+        }
+        
         /// <summary> After each wave, we can adjust the number of enemies each wave will spawn. </summary>
         private void UpdateWaveParamaters()
         {
