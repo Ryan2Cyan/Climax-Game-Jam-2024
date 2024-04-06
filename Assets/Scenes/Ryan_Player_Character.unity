@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 162979045}
   - component: {fileID: 162979046}
+  - component: {fileID: 162979047}
   m_Layer: 0
   m_Name: Enemy_Manager
   m_TagString: Untagged
@@ -167,9 +168,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d729bfc0a8b3a5146a0d7dadac4bba70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyPrefab: {fileID: 6333811173948244981, guid: 6b3527460dc0e124c942119af15d0744, type: 3}
-  Enemies: []
+  EnemyPool: {fileID: 162979047}
+  AllEnemies: []
   MapBounds: {x: 61.93, y: 60}
+--- !u!114 &162979047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 162979043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4288e9fe5269a66449252b6e372b2110, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Prefab: {fileID: 6333811173948244981, guid: 6b3527460dc0e124c942119af15d0744, type: 3}
+  NewObjectAdded: 0
 --- !u!1 &250745967
 GameObject:
   m_ObjectHideFlags: 0
@@ -410,7 +425,7 @@ GameObject:
   - component: {fileID: 1228165594}
   - component: {fileID: 1228165593}
   - component: {fileID: 1228165592}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -588,14 +603,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2145393827}
-  m_LocalRotation: {x: 0.5150381, y: 0, z: 0, w: 0.85716736}
-  m_LocalPosition: {x: 0, y: 8.25, z: -4.92}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 14.31, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 62, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1001 &3027760383992551736
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -612,6 +627,18 @@ PrefabInstance:
       propertyPath: PlayerCamera
       value: 
       objectReference: {fileID: 2145393829}
+    - target: {fileID: 3290576767204606299, guid: a12b7eb8f5c334146905f46474306044, type: 3}
+      propertyPath: RotationSpeed
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5047933442553641130, guid: a12b7eb8f5c334146905f46474306044, type: 3}
+      propertyPath: MainCamera
+      value: 
+      objectReference: {fileID: 2145393829}
+    - target: {fileID: 5047933442553641130, guid: a12b7eb8f5c334146905f46474306044, type: 3}
+      propertyPath: RotationTime
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 6771264143934960518, guid: a12b7eb8f5c334146905f46474306044, type: 3}
       propertyPath: m_RootOrder
       value: 4

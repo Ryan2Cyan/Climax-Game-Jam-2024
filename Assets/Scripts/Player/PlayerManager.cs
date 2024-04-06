@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using General;
 using Inputs;
 using UnityEngine;
 using static Player.PlayerStates;
@@ -14,6 +15,7 @@ namespace Player
         public Transform MeleeCentre;
         public List<GameObject> Ghosts = new();
         [HideInInspector] public Animator Animator;
+        [HideInInspector] public CursorWorldRaycast CursorWorldRaycastScript;
         
         [Header("Player Settings")]
         public int MaxHealth = 200;
@@ -39,6 +41,7 @@ namespace Player
         {
             Instance = this;
             Animator = GetComponent<Animator>();
+            CursorWorldRaycastScript = GetComponent<CursorWorldRaycast>();
             _currentState = _arcaneWeapon;
             CurrentHealth = MaxHealth;
         }
@@ -46,8 +49,9 @@ namespace Player
         private void Update()
         {
             _currentState.OnUpdate(this);
-            FaceCursorDirection();
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(_targetDirection), Time.deltaTime * RotationSpeed);
+            // FaceCursorDirection();
+            // transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(_targetDirection), Time.deltaTime * RotationSpeed);
+            CursorWorldRaycastScript.GetCursorDirection();
         }
 
         private void OnEnable()

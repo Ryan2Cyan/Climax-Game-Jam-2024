@@ -123,11 +123,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6771264143934960518}
+  - component: {fileID: 3290576767204606299}
+  - component: {fileID: 6070858236697469948}
+  - component: {fileID: 5047933442553641130}
   - component: {fileID: 2534444711836058632}
   - component: {fileID: 729122828900638480}
   - component: {fileID: 2662240734125427911}
-  - component: {fileID: 6070858236697469948}
-  - component: {fileID: 3290576767204606299}
   - component: {fileID: 2350791710598069891}
   m_Layer: 0
   m_Name: Player
@@ -153,8 +154,63 @@ Transform:
   - {fileID: 7625442084716637838}
   - {fileID: 1761517190649293667}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3290576767204606299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 392350599809307234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b262693b34b8fa1488d459b8bb383af5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerCamera: {fileID: 0}
+  MeleeCentre: {fileID: 804699832556233137}
+  Ghosts:
+  - {fileID: 4359137801727722040}
+  - {fileID: 7819143521267041968}
+  - {fileID: 140236457797623832}
+  - {fileID: 1784932977677512438}
+  Animator: {fileID: 0}
+  CursorWorldRaycastScript: {fileID: 0}
+  MaxHealth: 200
+  MeleeRadius: 5
+  RotationSpeed: 8
+  CurrentHealth: 0
+--- !u!114 &6070858236697469948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 392350599809307234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bf17b4f00f32804aa484f71fa120890, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Speed: 10
+--- !u!114 &5047933442553641130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 392350599809307234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be1fe77effa040747b5976f9c0f789ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RotationTime: 20
+  GroundLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  MainCamera: {fileID: 0}
 --- !u!33 &2534444711836058632
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -226,41 +282,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6070858236697469948
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 392350599809307234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bf17b4f00f32804aa484f71fa120890, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Speed: 10
---- !u!114 &3290576767204606299
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 392350599809307234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b262693b34b8fa1488d459b8bb383af5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerCamera: {fileID: 0}
-  MeleeCentre: {fileID: 804699832556233137}
-  Ghosts:
-  - {fileID: 4359137801727722040}
-  - {fileID: 7819143521267041968}
-  - {fileID: 140236457797623832}
-  - {fileID: 1784932977677512438}
-  Animator: {fileID: 0}
-  HitPoints: 100
-  MeleeRadius: 5
 --- !u!95 &2350791710598069891
 Animator:
   serializedVersion: 5
