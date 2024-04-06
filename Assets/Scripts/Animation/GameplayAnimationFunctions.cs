@@ -1,18 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
+using General;
 using UnityEngine;
 
-public class GameplayAnimationFunctions : MonoBehaviour
+namespace Animation
 {
-    // Start is called before the first frame update
-    void Start()
+    public class GameplayAnimationFunctions : MonoBehaviour
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public void ChangeGameplayState(int state)
+        {
+            GameplayManager.Instance.SetState_Event((GameplayManager.GameplayState)state);
+        }
     }
 }
