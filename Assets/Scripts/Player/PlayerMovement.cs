@@ -5,17 +5,18 @@ namespace Player
 {
     public class PlayerMovement : MonoBehaviour
     {
+        [Header("Settings")]
         public float Speed;
+        public float Smoothing = 1f;
         
         #region UnityFunctions
 
         private void FixedUpdate()
         {
-            var Transform = transform;
-            var currentPosition = Transform.position;
+            var playerPosition = transform.position;
             var movementVector = InputManager.Instance.Movement * (Speed * Time.deltaTime);
-            currentPosition = new Vector3(currentPosition.x + movementVector.x, currentPosition.y, currentPosition.z + movementVector.y);
-            Transform.position = currentPosition;
+            var desiredPosition = new Vector3(playerPosition.x + movementVector.x, playerPosition.y, playerPosition.z + movementVector.y);
+            transform.position = Vector3.Lerp(playerPosition, desiredPosition, Smoothing * Time.deltaTime);
         }
 
         #endregion
