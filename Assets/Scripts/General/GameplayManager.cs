@@ -47,6 +47,11 @@ namespace General
 
         #region PublicFunctions
 
+        public void SetState_Integer(int state)
+        {
+            SetState_Event((GameplayState)state);
+        }
+        
         public void SetState_Event(GameplayState state)
         {
             switch (state)

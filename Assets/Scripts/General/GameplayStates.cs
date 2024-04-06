@@ -69,6 +69,7 @@ namespace General
         public void OnStart(GameplayManager gameplayManager)
         {
             if(gameplayManager.DebugActive) Debug.Log("Gameplay State: <b>Start</b>");
+            SceneManager.ChangeScene(SceneManager.Scene.Game);
         }
 
         public void OnUpdate(GameplayManager gameplayManager)
