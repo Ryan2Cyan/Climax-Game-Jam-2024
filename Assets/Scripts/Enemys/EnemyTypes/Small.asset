@@ -17,3 +17,5 @@ MonoBehaviour:
   speed: 5
   attackCooldown: 1
   isRanged: 0
+  spawnValue: 1
+  spawnChance: 6

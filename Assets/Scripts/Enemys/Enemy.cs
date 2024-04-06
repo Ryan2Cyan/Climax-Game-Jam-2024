@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using General;
 using Player;
 using UnityEngine;
@@ -8,7 +9,7 @@ namespace Enemys
 {
     public class Enemy : MonoBehaviour, IPooledObject
     {
-        [Header("Settings")]
+        [Header("Enemy Stats")]
         public int MaxHealth = 250;
         public float Speed;
         public int Damage;
@@ -16,7 +17,10 @@ namespace Enemys
         public float DamagedCooldown = 0.25f;
         public float GhostTargetShiftCooldown = 1f;
         public bool EnableDebug = true;
+        public bool isRanged;
+        public bool explodeOnDeath;
 
+        [Header("Settings")]
         public Material DefaultMaterial;
         public Material DamagedMaterial;
 
@@ -29,11 +33,19 @@ namespace Enemys
         public readonly MoveEnemyState MoveEnemyState = new();
         public readonly AttackEnemyState AttackEnemyState = new();
         public readonly DeathEnemyState DeathEnemyState = new();
-        
+
+        public RangedRadius rangeRadius;
+        public Collider explosionRadius;
+        public GameObject bullet;
+        public ObjectPool bulletPool;
+        public List<Bullet> bullets = new ();
+
         private float _targetUpdateTimer;
         private MeshRenderer _meshRenderer;
         private IEnumerator _currentCoroutine;
 
+        public int enemyTypeIndex;
+        public EnemyType enemyType;
         // States:
         private IEnemyState _currentState;
         
@@ -91,7 +103,7 @@ namespace Enemys
             gameObject.SetActive(true);
             TargetUpdate();
             _currentState = SpawnEnemyState;
-            CurrentHealth = MaxHealth;
+           
             CurrentTarget = PlayerManager.Instance.transform;
             
             // Create a new instance of mesh renderer's material:
@@ -151,7 +163,54 @@ namespace Enemys
             _meshRenderer.material = new Material(DefaultMaterial);
             yield return null;
         }
-        
+       public void SetEnemyType(EnemyType newEnemyType)
+        {
+            enemyType = newEnemyType;
+
+            MaxHealth = newEnemyType.health;
+            Damage = newEnemyType.damage;
+            Speed = newEnemyType.speed;
+            AttackCooldown = newEnemyType.attackCooldown;
+            Damage = newEnemyType.damage;
+            isRanged = newEnemyType.isRanged;
+            explodeOnDeath = newEnemyType.explodeOnDeath;
+
+            CurrentHealth = MaxHealth;
+
+            switch (enemyTypeIndex)
+            {
+                case 0: //small
+                    {
+                        transform.localScale = new Vector3(1, 1, 1);
+                        name = "SmallEnemy";
+                    }
+                    break;
+                case 1: //large
+                    {
+                        transform.localScale = new Vector3(2, 2, 2);
+                        name = "LargeEnemy";
+                    }
+                    break;
+                case 2: //ranged
+                    {
+                        transform.localScale = new Vector3(1, 2, 1);
+                        name = "RangedEnemy";
+                    }
+                    break;
+                case 3: //bomb
+                    {
+                        transform.localScale = new Vector3(1, 0.5f, 1);
+                        name = "BombEnemy";
+                    }
+                    break;
+
+            }
+        }
+        public void DespawnBullet(Bullet bullet)
+        {
+            bulletPool.ReleasePooledObject(bullet);
+        }
+
         #endregion
     }
 }
