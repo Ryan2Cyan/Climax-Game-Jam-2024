@@ -15,8 +15,10 @@ MonoBehaviour:
   health: 2
   damage: 10
   speed: 10
-  attackCooldown: 3
+  attackCooldown: 1
   isRanged: 0
+  rangeRadius: 0
   explodeOnDeath: 1
+  explosionRadius: 5
   spawnValue: 5
-  spawnChance: 0
+  spawnChance: 2
