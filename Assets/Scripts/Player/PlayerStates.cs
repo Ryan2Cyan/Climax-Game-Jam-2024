@@ -1,3 +1,4 @@
+using Enemys;
 using UnityEngine;
 
 namespace Player
@@ -38,7 +39,7 @@ namespace Player
                 foreach (var enemy in EnemyManager.Instance.Enemies)
                 {
                     var distance = Vector3.Distance(enemy.transform.position, player.MeleeCentre.position);
-                    if (distance > player.MeleeRadius) return;
+                    if (distance > player.MeleeRadius) continue;
                     enemy.OnDamage(_damageOnHit);
                     _cooldownTimer = _hitCooldown;
                 }
@@ -46,7 +47,8 @@ namespace Player
 
             public void OnDamaged(PlayerManager player, int damage)
             {
-                
+                player.CurrentHealth -= damage;
+                if (player.CurrentHealth <= 0) player.OnDeath();
             }
 
             public void OnEnd(PlayerManager player)

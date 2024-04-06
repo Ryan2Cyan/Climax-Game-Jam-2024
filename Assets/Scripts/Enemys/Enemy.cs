@@ -1,4 +1,4 @@
-using System;
+using System.Collections;
 using Player;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -7,58 +7,52 @@ namespace Enemys
 {
     public class Enemy : MonoBehaviour
     {
-        public int Health;
+        [Header("Settings")]
+        public int MaxHealth = 250;
         public float Speed;
         public int Damage;
         public float AttackCooldown;
+        public float DamagedCooldown = 0.25f;
+        public float GhostTargetShiftCooldown = 1f;
+        public bool EnableDebug = true;
 
-        private float _attackTimer;
+        public Material DefaultMaterial;
+        public Material DamagedMaterial;
+
+        [HideInInspector] public Vector3 MoveVector;
+        [HideInInspector] public Transform CurrentTarget;
+        [HideInInspector] public float CurrentHealth;
+        [HideInInspector] public bool IsAlive = true;
+        
         private float _targetUpdateTimer;
+        private MeshRenderer _meshRenderer;
+        private IEnumerator _currentCoroutine;
 
-        private Transform _currentTarget;
-        private Vector3 _position;
-        private Vector3 _move;
-
-        private bool _isAlive = true;
-
-        private enum State
-        {
-            Idle,
-            Move,
-            Attack,
-            Die
-        }
-        private State _currentState;
-
+        // States:
+        private IEnemyState _currentState;
+        private readonly MoveEnemyState _moveEnemyState = new();
+        private readonly AttackEnemyState _attackEnemyState = new();
+        private readonly DeathEnemyState _deathEnemyState = new();
+        
         #region UnityFunctions
 
         private void Start()
         {
             TargetUpdate();
-            _currentState = State.Idle;
+            _currentState = _moveEnemyState;
+            CurrentHealth = MaxHealth;
+            CurrentTarget = PlayerManager.Instance.transform;
+            
+            // Create a new instance of mesh renderer's material:
+            _meshRenderer = GetComponent<MeshRenderer>();
+            var material = _meshRenderer.material;
+            _meshRenderer.material = new Material(material);
         }
 
         private void Update()
         {
-            _position = transform.position;
-
-            // Every 5 seconds change to a new target between the ghosts and the player: 
-            if (_targetUpdateTimer >= 1)
-            {
-                TargetUpdate();
-                _targetUpdateTimer = 0;
-            }
-            else _targetUpdateTimer += Time.deltaTime;
-
-            switch (_currentState)
-            {
-                case State.Idle: Idle(); break;
-                case State.Move: Move(); break;
-                case State.Attack: Attack(); break;
-                case State.Die: OnDeath(); break;
-                default: throw new ArgumentOutOfRangeException();
-            }
-        
+            TargetUpdate();
+            _currentState.OnUpdate(this);
         }
         
         private void OnTriggerEnter(Collider other)
@@ -66,10 +60,13 @@ namespace Enemys
             switch (other.gameObject.tag)
             {
                 case "Player":
-                    _currentState = State.Attack;
-                    break;
+                {
+                    SetState(_attackEnemyState);
+                } break;
                 case "Enemy":
-                    break;
+                {
+                    
+                } break;
             }
         }
         
@@ -78,11 +75,13 @@ namespace Enemys
             switch (other.gameObject.tag)
             {
                 case "Player":
-                    _currentState = State.Move;
-                    break;
+                {
+                    SetState(_moveEnemyState);
+                }break;
                 case "Enemy":
-                    _move *= -1;
-                    break;
+                {
+                    MoveVector *= -1;
+                }break;
             }
         }
 
@@ -90,61 +89,57 @@ namespace Enemys
 
         #region PublicFunctions
 
-        public void SetTarget(Transform newTarget)
+        public void SetState(IEnemyState state)
         {
-            _currentTarget = newTarget;
+            _currentState.OnEnd(this);
+            _currentState = state;
+            _currentState.OnStart(this);
         }
-
-        public bool IsAlive()
-        {
-            return _isAlive;
-        }
-
         #endregion
 
         #region PrivateFunctions
 
-        private void Idle()
-        {
-            _currentState = State.Move;
-        }
-        private void Move()
-        {
-       
-            //move towards the target (the player) by step each frame
-            var step = Speed * Time.deltaTime;
-            _move = Vector3.MoveTowards(_position, _currentTarget.transform.position, step);
-            transform.position = _move;
-        }
-        
-        private void Attack()
-        {
-            if (_attackTimer > AttackCooldown) PlayerManager.Instance.OnDamaged(Damage);
-            else _attackTimer += Time.deltaTime;
-        }
-
-        private void OnDeath()
-        {
-            // Sets a death flag, for the enemy manager to delete this enemy:
-            _isAlive = false;
-        }
-
         public void OnDamage(int damage)
         {
-            Health -= damage;
-            if (Health <= 0) _currentState = State.Die;
+            if(EnableDebug) Debug.Log("Enemy (" + gameObject.name + "): Damaged");
+            CurrentHealth -= damage;
+            if (CurrentHealth <= 0) SetState(_deathEnemyState);
+            else
+            {
+                if(_currentCoroutine != null) StopCoroutine(_currentCoroutine);
+                StartCoroutine(_currentCoroutine = DamageShaderSwap(DamagedCooldown));
+            }
         }
 
         private void TargetUpdate()
         {
-            // This randomly sets the enemies target to either be the player or one of 4 "ghost" objects that are children
-            //of the player, this helps to stop all the clumping together of the large number of enemies somewhat:
-            var randomIndex = Random.Range(0, PlayerManager.Instance.Ghosts.Count);
+            if (_targetUpdateTimer >= GhostTargetShiftCooldown)
+            {
+                // This randomly sets the enemies target to either be the player or one of 4 "ghost" objects that are children
+                //of the player, this helps to stop all the clumping together of the large number of enemies somewhat:
+                var randomIndex = Random.Range(0, PlayerManager.Instance.Ghosts.Count);
             
-            // If it equals four, just follow the player as normal:
-            if (randomIndex == 4) _currentTarget = PlayerManager.Instance.transform;
-            var ghost = PlayerManager.Instance.Ghosts[randomIndex].transform;
-            _currentTarget = ghost;
+                // If it equals four, just follow the player as normal:
+                if (randomIndex == 4) CurrentTarget = PlayerManager.Instance.transform;
+                var ghost = PlayerManager.Instance.Ghosts[randomIndex].transform;
+                CurrentTarget = ghost;
+                _targetUpdateTimer = 0;
+            }
+            else _targetUpdateTimer += Time.deltaTime;
+        }
+        
+        private IEnumerator DamageShaderSwap(float duration)
+        {
+            var elapsedTime = duration;
+            _meshRenderer.material = new Material(DamagedMaterial);
+            while (elapsedTime > 0f)
+            {
+                elapsedTime -= Time.deltaTime;
+                yield return null;
+            }
+
+            _meshRenderer.material = new Material(DefaultMaterial);
+            yield return null;
         }
         
         #endregion

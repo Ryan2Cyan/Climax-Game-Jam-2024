@@ -16,11 +16,17 @@ namespace Player
         [HideInInspector] public Animator Animator;
         
         [Header("Player Settings")]
-        public float HitPoints;
+        public int MaxHealth = 200;
+        public float MovementSmoothTime = 1f;
         public float MeleeRadius;
         
+        [HideInInspector] public float CurrentHealth;
+
+        private Vector2 _previousMousePosition;
+        private float _movementVelocity;
         private IPlayerSpellState _currentState;
         private float _prevAngle;
+        
         
         // Player states:
         private readonly ArcaneWeaponPlayerState _arcaneWeapon = new();
@@ -30,8 +36,9 @@ namespace Player
         private void Awake()
         {
             Instance = this;
-            _currentState = _arcaneWeapon;
             Animator = GetComponent<Animator>();
+            _currentState = _arcaneWeapon;
+            CurrentHealth = MaxHealth;
         }
 
         private void Update()
@@ -66,6 +73,12 @@ namespace Player
             _currentState.OnDamaged(this, damage);
         }
 
+        public void OnDeath()
+        {
+            
+        }
+        
+
         #endregion
 
         #region PrivateFunctions
@@ -74,11 +87,12 @@ namespace Player
         {
             _currentState.OnAttack(this);
         }
-
+        
         private void FaceCursorDirection()
         {
             // Convert mouse position from screen to world space:
             var mousePosition = InputManager.Instance.MousePosition;
+            if (mousePosition == _previousMousePosition) return; 
             var lookPosition = PlayerCamera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 10f));
             
             // Get direction to the world-space mouse position:
@@ -86,6 +100,7 @@ namespace Player
             direction = new Vector3(direction.x, 0f, direction.z).normalized;
             
             transform.rotation = Quaternion.LookRotation(direction);
+            _previousMousePosition = mousePosition;
         }
 
         #endregion
