@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHealth: 40
-  Speed: 3
+  Speed: 1
   Damage: 10
   AttackCooldown: 0.5
   DamagedCooldown: 0.25
