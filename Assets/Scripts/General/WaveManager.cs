@@ -17,6 +17,8 @@ namespace General
         public float MaxWave = 100f;
         public float MaximumWaveDuration = 100f;
         public float MaximumWaveSpawnPoints = 100f;
+        [Range(1,10)]
+        public int WaveStrengthModifier = 1;
         public bool DebugActive;
         [HideInInspector] public int CurrentWave;
 
@@ -56,7 +58,7 @@ namespace General
         public void StartWave()
         {
             OnWaveStart?.Invoke();
-            EnemyManager.Instance.SpawnEnemies(_currentSpawnPoints, _currentWaveDuration);
+            EnemyManager.Instance.SpawnEnemies(_currentSpawnPoints * WaveStrengthModifier, _currentWaveDuration);
         }
         
         public void Reset()
