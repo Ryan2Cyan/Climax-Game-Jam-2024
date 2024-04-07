@@ -79,6 +79,7 @@ GameObject:
   - component: {fileID: 6782033322078994536}
   - component: {fileID: 797531301093171435}
   - component: {fileID: 5477521274505257534}
+  - component: {fileID: 8855369244324757590}
   - component: {fileID: 699239163719253173}
   m_Layer: 0
   m_Name: Enemy
@@ -124,10 +125,11 @@ MonoBehaviour:
   DeadMaterial: {fileID: 2100000, guid: d30102823b0c53946a94bf8054f80bc6, type: 2}
   GhostTargetShiftCooldown: 1
   DamagedCooldown: 0.25
+  MeleeRange: 0
   ExplosionRadius: 10
   ShootingRadius: 15
   DespawnTime: 30
-  EnableDebug: 1
+  EnableDebug: 0
   MoveVector: {x: 0, y: 0, z: 0}
   CurrentTarget: {fileID: 0}
   MeshRenderer: {fileID: 0}
@@ -198,12 +200,39 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &8855369244324757590
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6333811173948244981}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 0, y: 0, z: 0}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 0
+  m_ImplicitTensor: 0
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 116
+  m_CollisionDetection: 0
 --- !u!114 &699239163719253173
 MonoBehaviour:
   m_ObjectHideFlags: 0

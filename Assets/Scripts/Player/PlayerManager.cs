@@ -22,6 +22,7 @@ namespace Player
         public float MeleeRadius;
         public float DamagedCooldown = 0.25f;
         public float IFrameDuration;
+        public float ArcaneWeaponCooldown = 0.25f;
         public int MaxHealth = 200;
         
         [HideInInspector] public float CurrentHealth;

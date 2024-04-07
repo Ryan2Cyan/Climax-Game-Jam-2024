@@ -15,14 +15,13 @@ namespace Player
     public class ArcaneWeaponPlayerState : IPlayerSpellState
     {
         private const int _damageOnHit = 10;
-        private const float _hitCooldown = 0.5f;
         private float _cooldownTimer;
 
         private static readonly int ArcaneWeapon = Animator.StringToHash("ArcaneWeapon");
         
         public void OnStart(PlayerManager player)
         {
-            
+            _cooldownTimer = player.ArcaneWeaponCooldown;
         }
 
         public void OnUpdate(PlayerManager player)
@@ -39,8 +38,8 @@ namespace Player
                 var distance = Vector3.Distance(enemy.transform.position, player.MeleeCentre.position);
                 if (distance > player.MeleeRadius) continue;
                 enemy.OnDamage(_damageOnHit);
-                _cooldownTimer = _hitCooldown;
             }
+            _cooldownTimer = player.ArcaneWeaponCooldown;
         }
 
         public void OnDamaged(PlayerManager player, int damage)

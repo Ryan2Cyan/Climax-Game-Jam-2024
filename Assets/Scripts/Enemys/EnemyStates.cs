@@ -15,7 +15,6 @@ namespace Enemys
     {
         public void OnStart(Enemy enemy)
         {
-            enemy.SetState(enemy.MoveEnemyState);
         }
 
         public void OnUpdate(Enemy enemy) { }
@@ -88,19 +87,6 @@ namespace Enemys
                _attackTimer = enemy.AttackCooldown;
            }
            else _attackTimer -= Time.deltaTime;
-           
-            // else if (enemy.explodeOnDeath)
-            // {
-            //     if (_attackTimer > enemy.AttackCooldown)
-            //     {
-            //         enemy.SetState(enemy.DeathEnemyState);
-            //         _attackTimer = 0f;
-            //     
-            //     }
-            //     else _attackTimer += Time.deltaTime;
-            // }
-            // else
-            // {
        }
 
        public void OnEnd(Enemy enemy) { }
@@ -119,23 +105,7 @@ namespace Enemys
             _timer = enemy.DespawnTime;
             enemy.MeshRenderer.material = enemy.DamagedMaterial;
             _matSwapTime = enemy.DespawnTime - enemy.DamagedCooldown;
-
-            // if (enemy.explodeOnDeath)
-            // {
-            //     var playerPos = PlayerManager.Instance.transform.position;
-            //     if (Vector3.Distance(playerPos, enemy.transform.position) < enemy.ExplosionRadius)
-            //     {
-            //         PlayerManager.Instance.OnDamaged(enemy.Damage);
-            //         Debug.Log("HIT PLAYER!");
-            //     }
-            //     enemy.IsAlive = false;
-            //     EnemyManager.Instance.DespawnEnemy(enemy);
-            // }
-            // else
-            // {
-            //     enemy.IsAlive = false;
-            //     EnemyManager.Instance.DespawnEnemy(enemy);
-            //
+            _matSwapped = false;
        }
 
        public void OnUpdate(Enemy enemy)

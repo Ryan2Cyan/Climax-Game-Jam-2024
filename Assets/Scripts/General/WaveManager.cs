@@ -17,6 +17,7 @@ namespace General
         public float MaxWave = 100f;
         public float MaximumWaveDuration = 100f;
         public float MaximumWaveSpawnPoints = 100f;
+        public int StartingWave = 1;
         public bool DebugActive;
         [HideInInspector] public int CurrentWave;
 
@@ -85,7 +86,7 @@ namespace General
         private IEnumerator WaveCountTimer()
         {
             if(DebugActive) Debug.Log("Start WaveTimer");
-            CurrentWave = 1;
+            CurrentWave = StartingWave;
             _waveTimer = _currentWaveDuration;
             
             while (_active)

@@ -88,6 +88,7 @@ namespace General
         public void OnStart(GameplayManager gameplayManager)
         {
             if(gameplayManager.DebugActive) Debug.Log("Gameplay State: <b>Playing</b>");
+            WaveManager.Instance.ToggleActive(true);
         }
 
         public void OnUpdate(GameplayManager gameplayManager) { }
@@ -95,6 +96,7 @@ namespace General
         public void OnEnd(GameplayManager gameplayManager)
         {
             PlayerManager.Instance.PlayerCameraScript.enabled = true;
+            WaveManager.Instance.ToggleActive(false);
         }
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode mode) { }

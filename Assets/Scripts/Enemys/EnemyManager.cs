@@ -67,7 +67,7 @@ namespace Enemys
         /// <summary>Spawns the wave of enemies.</summary>
         private IEnumerator SpawnEnemiesCoroutine(int spawnPoints, float waveDuration)
         {
-            var timePerSpawn = waveDuration / 10f;
+            var timePerSpawn = 0.5f;
             var elapsedTime = timePerSpawn;
             var spawnCurrency = spawnPoints;
             

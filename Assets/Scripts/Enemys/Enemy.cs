@@ -30,7 +30,7 @@ namespace Enemys
         [HideInInspector] public Transform CurrentTarget;
         [HideInInspector] public MeshRenderer MeshRenderer;
         [HideInInspector] public float CurrentHealth;
-        [HideInInspector] public bool IsAlive = true;
+        public bool IsAlive = true;
         
         public readonly MoveEnemyState SpawnEnemyState = new();
         public readonly MoveEnemyState MoveEnemyState = new();
@@ -41,6 +41,8 @@ namespace Enemys
         private float _targetUpdateTimer;
         private Material _defaultMaterial;
         private IEnumerator _currentCoroutine;
+        private Rigidbody _rigidbody;
+        private BoxCollider _collider;
         
         // States:
         private IEnemyState _currentState;
@@ -54,36 +56,6 @@ namespace Enemys
             _currentState.OnUpdate(this);
         }
         
-        private void OnTriggerEnter(Collider other)
-        {
-            switch (other.gameObject.tag)
-            {
-                case "Player":
-                {
-                    SetState(AttackEnemyState);
-                } break;
-                case "Enemy":
-                {
-                    
-                } break;
-            }
-        }
-        
-        private void OnTriggerExit(Collider other)
-        {
-            switch (other.gameObject.tag)
-            {
-                case "Player":
-                {
-                    SetState(MoveEnemyState);
-                }break;
-                case "Enemy":
-                {
-                    MoveVector *= -1;
-                }break;
-            }
-        }
-
         #endregion
 
         #region PublicFunctions
@@ -100,13 +72,15 @@ namespace Enemys
             gameObject.SetActive(true);
             TargetUpdate();
             _currentState = SpawnEnemyState;
-           
+            _rigidbody = GetComponent<Rigidbody>();
+            _collider = GetComponent<BoxCollider>();
             CurrentTarget = PlayerManager.Instance.transform;
             
             // Create a new instance of mesh renderer's material:
             MeshRenderer = GetComponent<MeshRenderer>();
             var material = MeshRenderer.material;
             MeshRenderer.material = new Material(material);
+            IsAlive = true;
         }
         
         public void SetEnemyType(EnemyType newEnemyType)
@@ -123,7 +97,9 @@ namespace Enemys
             AttackCooldown = newEnemyType.AttackCooldown;
             Damage = newEnemyType.Damage;
             CurrentHealth = MaxHealth;
-            IsAlive = true;
+
+            _collider.enabled = false;
+            _rigidbody.velocity = Vector3.zero;
         }
         
         public void Release()
