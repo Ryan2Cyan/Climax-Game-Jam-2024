@@ -112,6 +112,7 @@ namespace Enemys
             enemy.MeshRenderer.material = enemy.DamagedMaterial;
             _matSwapTime = enemy.DespawnTime - enemy.DamagedCooldown;
             _matSwapped = false;
+            enemy.Collider.enabled = false;
        }
 
        public void OnUpdate(Enemy enemy)

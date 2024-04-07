@@ -3,6 +3,7 @@ using System.Collections;
 using General;
 using Player;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Enemys
@@ -45,7 +46,7 @@ namespace Enemys
         private Material _defaultMaterial;
         private IEnumerator _currentCoroutine;
         private Rigidbody _rigidbody;
-        private BoxCollider _collider;
+        public BoxCollider Collider;
         private float _targetUpdateTimer;
         private bool _inFireWall;
         
@@ -79,7 +80,7 @@ namespace Enemys
             TargetUpdate();
             _currentState = SpawnEnemyState;
             _rigidbody = GetComponent<Rigidbody>();
-            _collider = GetComponent<BoxCollider>();
+            Collider = GetComponent<BoxCollider>();
             CurrentTarget = PlayerManager.Instance.transform;
             
             // Create a new instance of mesh renderer's material:
@@ -104,7 +105,7 @@ namespace Enemys
             Damage = newEnemyType.Damage;
             CurrentHealth = MaxHealth;
 
-            _collider.enabled = false;
+            Collider.enabled = true;
             _rigidbody.velocity = Vector3.zero;
             Animator.SetBool(Running, true);
         }
