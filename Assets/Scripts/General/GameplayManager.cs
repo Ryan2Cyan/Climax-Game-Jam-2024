@@ -12,6 +12,7 @@ namespace General
         public float SpellChangeTimer;
         public bool Paused;
         public bool DebugActive;
+        public AudioManager audioManager;
 
         // States:
         private IGameplayState _currentState;
