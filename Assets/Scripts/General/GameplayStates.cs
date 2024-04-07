@@ -112,19 +112,27 @@ namespace General
         {
             if (gameplayManager.SpellChangeTimer <= 0)
             {
-                // Change Spell:
-                PlayerManager.Instance.ChangeSpell();
+                if (PlayerManager.Instance)
+                {
+                    // Change Spell:
+                    PlayerManager.Instance.ChangeSpell();
+                }
+                
                 gameplayManager.SpellChangeTimer = gameplayManager.SpellChangeInterval;
             }
             else gameplayManager.SpellChangeTimer -= Time.deltaTime;
+            if (UIManager.Instance)
             UIManager.Instance.SpellCountDown.text = ((int)gameplayManager.SpellChangeTimer).ToString();
         }
 
         public void OnEnd(GameplayManager gameplayManager)
         {
-            PlayerManager.Instance.PlayerCameraScript.enabled = true;
-            WaveManager.Instance.ToggleActive(false);
-            UIManager.Instance.Close();
+            if (PlayerManager.Instance)
+                PlayerManager.Instance.PlayerCameraScript.enabled = true;
+            if (WaveManager.Instance)
+                WaveManager.Instance.ToggleActive(false);
+            if (UIManager.Instance)
+                UIManager.Instance.Close();
         }
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode mode) { }

@@ -855,6 +855,10 @@ PrefabInstance:
       propertyPath: audioManager
       value: 
       objectReference: {fileID: 1706466034}
+    - target: {fileID: 7675489142169314318, guid: 8583da0050bf0d742935f8e25c8973be, type: 3}
+      propertyPath: StartingState
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -892,14 +896,14 @@ MonoBehaviour:
   sounds:
   - name: MainMenuMusic
     clip: {fileID: 8300000, guid: 63a9ee605b70a774b8b379c4fdf800c3, type: 3}
-    volume: 1
+    volume: 0.25
     pitch: 1
     loop: 1
     isPlaying: 0
     source: {fileID: 0}
   - name: GameplayMusic
     clip: {fileID: 8300000, guid: 25f63fd8b3c6f1a43a91581d6caf13cc, type: 3}
-    volume: 1
+    volume: 0.25
     pitch: 1
     loop: 1
     isPlaying: 0
@@ -920,6 +924,13 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: FireWall
     clip: {fileID: 8300000, guid: f26e9a5793b818c41b8612eba93101a0, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    isPlaying: 0
+    source: {fileID: 0}
+  - name: EldritchBlast
+    clip: {fileID: 8300000, guid: 9e62e180354a29f4ab6e381568a8f0b7, type: 3}
     volume: 1
     pitch: 1
     loop: 0
