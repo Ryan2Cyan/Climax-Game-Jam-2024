@@ -111,6 +111,7 @@ namespace General
         {
             if(gameplayManager.DebugActive) Debug.Log("Gameplay State: <b>Pause</b>");
             gameplayManager.Paused = true;
+            UIManager.Instance.PauseScreen.SetActive(true);
         }
 
         public void OnUpdate(GameplayManager gameplayManager) { }
@@ -118,6 +119,7 @@ namespace General
         public void OnEnd(GameplayManager gameplayManager)
         {
             gameplayManager.Paused = false;
+            UIManager.Instance.PauseScreen.SetActive(false);
         }
         public void OnSceneLoaded(Scene scene, LoadSceneMode mode) { }
 

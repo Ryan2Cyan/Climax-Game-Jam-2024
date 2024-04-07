@@ -123,6 +123,7 @@ namespace Enemys
             AttackCooldown = newEnemyType.AttackCooldown;
             Damage = newEnemyType.Damage;
             CurrentHealth = MaxHealth;
+            IsAlive = true;
         }
         
         public void Release()
