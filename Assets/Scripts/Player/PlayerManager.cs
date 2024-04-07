@@ -46,6 +46,8 @@ namespace Player
         private float _prevAngle;
         private float _rotateStartTime;
         private bool _playerIFrames;
+
+        public AudioManager audioManager;
         
         // Player states:
         private readonly ArcaneWeaponPlayerState _arcaneWeapon = new();
@@ -56,6 +58,8 @@ namespace Player
         {
             Instance = this;
             Animator = GetComponent<Animator>();
+            audioManager = FindObjectOfType<AudioManager>();
+            
             CursorWorldRaycastScript = GetComponent<CursorWorldRaycast>();
             _currentState = _arcaneWeapon;
             CurrentHealth = MaxHealth;

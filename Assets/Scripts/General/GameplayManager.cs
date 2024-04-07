@@ -10,6 +10,7 @@ namespace General
         public GameplayState StartingState;
         public bool Paused;
         public bool DebugActive;
+        public AudioManager audioManager;
 
         // States:
         private IGameplayState _currentState;

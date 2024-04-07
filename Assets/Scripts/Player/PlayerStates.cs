@@ -32,6 +32,7 @@ namespace Player
         {
             if(_cooldownTimer > 0f) return;
             player.Animator.SetTrigger(ArcaneWeapon);
+            player.audioManager.PlayOnce("ArcaneWeapon");
             foreach (var enemy in EnemyManager.Instance.AllEnemies)
             {
                 var distance = Vector3.Distance(enemy.transform.position, player.MeleeCentre.position);
