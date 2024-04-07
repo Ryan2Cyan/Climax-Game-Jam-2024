@@ -45,7 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d729bfc0a8b3a5146a0d7dadac4bba70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DebugActive: 0
   EnemyPool: {fileID: 3580773831657849106}
+  BulletPool: {fileID: 0}
   AllEnemies: []
   enemyTypes:
   - {fileID: 11400000, guid: 7cd77bd205b9ec84dbb0fbaf55504aa7, type: 2}
@@ -53,8 +55,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b1350fed860a28244971cfaf95ea1364, type: 2}
   - {fileID: 11400000, guid: 4296d22badc1a8b4da2a609c3c4a46ba, type: 2}
   MapBounds: {x: 61.93, y: 60}
-  spawnCurrency: 0
-  enemyTypesToSpawn: 
 --- !u!114 &3580773831657849106
 MonoBehaviour:
   m_ObjectHideFlags: 0

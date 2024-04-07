@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using General;
 using Player;
@@ -38,11 +39,12 @@ namespace Enemys
         public readonly DeathEnemyState DeathEnemyState = new();
         public readonly ShootEnemyState ShootEnemyState = new();
         
-        private float _targetUpdateTimer;
         private Material _defaultMaterial;
         private IEnumerator _currentCoroutine;
         private Rigidbody _rigidbody;
         private BoxCollider _collider;
+        private float _targetUpdateTimer;
+        private bool _inFireWall;
         
         // States:
         private IEnemyState _currentState;
@@ -106,7 +108,19 @@ namespace Enemys
         {
             gameObject.SetActive(false);
         }
-        
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (!other.gameObject.CompareTag("FireWall")) return;
+            _inFireWall = true;
+            StartCoroutine(InsideFireWall());
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.gameObject.CompareTag("FireWall")) _inFireWall = false;
+        }
+
         #endregion
 
         #region PrivateFunctions
@@ -124,6 +138,27 @@ namespace Enemys
             }
         }
 
+        private IEnumerator InsideFireWall()
+        {
+            var fireWallDamage = PlayerManager.Instance.FireWallDamage;
+            var fireWallDamageTick = PlayerManager.Instance.FireWallDamageCooldown;
+            var elapsedTime = fireWallDamageTick;
+            OnDamage(fireWallDamage);
+            
+            while (_inFireWall && IsAlive)
+            {
+                if (elapsedTime < 0f)
+                {
+                    OnDamage(fireWallDamage);
+                    elapsedTime = fireWallDamageTick;
+                }
+                else elapsedTime -= Time.deltaTime;
+                yield return null;
+            }
+            
+            yield return null;
+        }
+        
         private void TargetUpdate()
         {
             if (_targetUpdateTimer >= GhostTargetShiftCooldown)

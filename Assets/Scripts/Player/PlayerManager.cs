@@ -17,13 +17,23 @@ namespace Player
         [HideInInspector] public Animator Animator;
         [HideInInspector] public CursorWorldRaycast CursorWorldRaycastScript;
         
+        [Header("Spell Components")]
+        public GameObject FireWall;
+        
         [Header("Player Settings")]
         public Material DamagedMaterial;
         public float MeleeRadius;
         public float DamagedCooldown = 0.25f;
         public float IFrameDuration;
-        public float ArcaneWeaponCooldown = 0.25f;
         public int MaxHealth = 200;
+        
+        [Header("Arcane Weapon")]
+        public int ArcaneWeaponDamage;
+        public float ArcaneWeaponCooldown = 0.25f;
+
+        [Header("Fire Wall")] 
+        public int FireWallDamage;
+        public float FireWallDamageCooldown;
         
         [HideInInspector] public float CurrentHealth;
         [HideInInspector] public MeshRenderer MeshRenderer;
