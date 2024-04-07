@@ -119,24 +119,20 @@ MonoBehaviour:
   Speed: 1
   Damage: 10
   AttackCooldown: 0.5
-  DamagedCooldown: 0.25
-  GhostTargetShiftCooldown: 1
-  EnableDebug: 0
-  isRanged: 0
-  explodeOnDeath: 0
-  DefaultMaterial: {fileID: 2100000, guid: 0bafeb21a9064934588ebdc2cb95ba2e, type: 2}
+  Type: 0
   DamagedMaterial: {fileID: 2100000, guid: 7d92244f8d694654ab43251f3681f6d9, type: 2}
+  DeadMaterial: {fileID: 2100000, guid: d30102823b0c53946a94bf8054f80bc6, type: 2}
+  GhostTargetShiftCooldown: 1
+  DamagedCooldown: 0.25
+  ExplosionRadius: 10
+  ShootingRadius: 15
+  DespawnTime: 30
+  EnableDebug: 1
   MoveVector: {x: 0, y: 0, z: 0}
   CurrentTarget: {fileID: 0}
+  MeshRenderer: {fileID: 0}
   CurrentHealth: 0
   IsAlive: 1
-  rangeRadius: {fileID: 6874651064971036781}
-  explosionRadius: {fileID: 0}
-  bullet: {fileID: 9039172329650449807, guid: ac761b0f0e10541418563e023e911ba6, type: 3}
-  bulletPool: {fileID: 699239163719253173}
-  bullets: []
-  enemyTypeIndex: 0
-  enemyType: {fileID: 0}
 --- !u!33 &6782033322078994536
 MeshFilter:
   m_ObjectHideFlags: 0

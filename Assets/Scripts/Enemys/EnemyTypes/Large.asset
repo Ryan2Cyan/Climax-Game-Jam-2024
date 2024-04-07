@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5faae6210c1f16444bd70205204688f6, type: 3}
   m_Name: Large
   m_EditorClassIdentifier: 
-  health: 5
-  damage: 5
-  speed: 2.5
-  attackCooldown: 1
-  isRanged: 0
-  rangeRadius: 0
-  explodeOnDeath: 0
-  explosionRadius: 0
-  spawnValue: 5
-  spawnChance: 2
+  Type: 1
+  Material: {fileID: 2100000, guid: d98b2c4e5dbf21c46bcf502a4363c22b, type: 2}
+  Scale: {x: 1, y: 1, z: 1}
+  Name: Large_Enemey
+  Speed: 2
+  AttackCooldown: 0.2
+  MeleeRange: 2.5
+  MaxHealth: 50
+  Damage: 50
+  SpawnValue: 8

@@ -84,6 +84,8 @@ namespace General
     
     public class StartGameplayState : IGameplayState
     {
+        private static readonly int Hide = Animator.StringToHash("Hide");
+
         public void OnStart(GameplayManager gameplayManager)
         {
             if(gameplayManager.DebugActive) Debug.Log("Gameplay State: <b>Start</b>");
@@ -97,12 +99,14 @@ namespace General
 
         public void OnEnd(GameplayManager gameplayManager)
         {
-            PlayerManager.Instance.PlayerCameraScript.enabled = true;            
+            PlayerManager.Instance.PlayerCameraScript.enabled = true; 
+            PlayerManager.Instance.Animator.SetBool(Hide, false);
         }
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             PlayerManager.Instance.PlayerCameraScript.enabled = false;
+            PlayerManager.Instance.Animator.SetBool(Hide, true);
         }
     }
     

@@ -11,22 +11,31 @@ namespace Enemys
     {
         public static EnemyManager Instance;
 
+        [Header("Settings")] 
+        public bool DebugActive;
+        
         [Header("References")]
         public ObjectPool EnemyPool;
+        public ObjectPool BulletPool;
         public List<Enemy> AllEnemies = new();
 
         [Header("Enemy Types")]
         public EnemyType[] enemyTypes;
-     
 
+        public enum EnemyTypeEnum
+        {
+            Small = 0,
+            Large = 1,
+            Ranged = 2,
+            Bomb = 3
+        }
+        
         [Header("Settings")]
         public Vector2 MapBounds;
         private Vector2 _spawnExtent;
         private int _spawnedEnemies;
         private IEnumerator _spawnCoroutine;
-
-        public int spawnCurrency; //the spawnValue the enemy manager has per wave to determine the enemy types it can spawn
-        public List<int> enemyTypesToSpawn = new ();
+        
         #region UnityFunctions
 
         private void Awake()
@@ -38,14 +47,7 @@ namespace Enemys
         #endregion
 
         #region PublicFunctions
-
-        [ContextMenu("SpawnWave")]
-        public void Spawn10()
-        {
-            SpawnEnemies(3, 10f);
-        }
-
-
+        
         public void DespawnEnemy(Enemy enemy)
         {
             EnemyPool.ReleasePooledObject(enemy);    
@@ -58,48 +60,52 @@ namespace Enemys
        
         public void SpawnEnemies(int spawnPoints, float waveDuration)
         {
-            spawnCurrency = spawnPoints;
             if (_spawnCoroutine != null) StopCoroutine(_spawnCoroutine);
-            StartCoroutine(_spawnCoroutine = SpawnEnemiesCoroutine(waveDuration));
+            StartCoroutine(_spawnCoroutine = SpawnEnemiesCoroutine(spawnPoints, waveDuration));
         }
 
-        private IEnumerator SpawnEnemiesCoroutine(float waveDuration) //spawns the wave of enemies
+        /// <summary>Spawns the wave of enemies.</summary>
+        private IEnumerator SpawnEnemiesCoroutine(int spawnPoints, float waveDuration)
         {
-            DetermineEnemyTypesToSpawn();
-            var amountToSpawn = enemyTypesToSpawn.Count;
-            var timePerSpawn = waveDuration / amountToSpawn;
+            var timePerSpawn = waveDuration / 10f;
             var elapsedTime = timePerSpawn;
-            var spawnedEnemies = amountToSpawn;
-           
-          
-
-            while (spawnedEnemies > 0)
+            var spawnCurrency = spawnPoints;
+            
+            while (spawnCurrency > 0)
             {
                 elapsedTime -= Time.deltaTime;
                 if (elapsedTime < 0f)
                 {
+                    var type = GetRandomType();
+                    if (DebugActive) Debug.Log("Spawn Enemy: <b>[" + (EnemyTypeEnum)type + "]</b>");
+                    var enemyValue = enemyTypes[type].SpawnValue;
+                    var newTotal = spawnCurrency - enemyValue;
+                    if (newTotal > 0)
+                    {
+                        spawnCurrency -= enemyValue;
+                        Spawn(type);
+                    }
+                    else spawnCurrency--;
                     elapsedTime = timePerSpawn;
-                    spawnedEnemies -= 1;
-                    Spawn(enemyTypesToSpawn[0]);
-                    enemyTypesToSpawn.RemoveAt(0);
                 }
                 yield return null;
             }
             yield return null;
         }
-        ///Spawn the enemy, name it, set the player up as its target, then add to the enemies list. 
+        
+        /// <summary>Spawn the enemy, name it, set the player up as its target, then add to the enemies list.</summary>
         private void Spawn(int enemyTypeIndex) //spawns one enemy
         {
             
             var enemy = (Enemy)EnemyPool.GetPooledObject();
             if (EnemyPool.NewObjectAdded) AllEnemies.Add(enemy);
             enemy.transform.position = DetermineSpawnLocation();
-            enemy.enemyTypeIndex = enemyTypeIndex;
             enemy.SetEnemyType(enemyTypes[enemyTypeIndex]);
 
         }
-        /// Spawn enemies either north, south, east, or west, then random the other coordinate within the
-        /// spawn extent. 
+        
+        /// <summary>Spawn enemies either north, south, east, or west, then random the other coordinate within the
+        /// spawn extent.</summary>
         private Vector3 DetermineSpawnLocation()
         {
             var spawnPosition = Vector3.zero;
@@ -125,21 +131,21 @@ namespace Enemys
             }
             return spawnPosition;
         }
-        private void DetermineEnemyTypesToSpawn()
+        
+        private static int GetRandomType()
         {
-            while (spawnCurrency > 0)
+            var randomValue = Random.value;
+            // return (int)EnemyTypeEnum.Large;
+            return randomValue switch
             {
-                //int type = Random.Range(0, enemyTypes.Length);
-                int type = GetRandomType();
-                if (enemyTypes[type].spawnValue <= spawnCurrency)
-                {
-                    spawnCurrency -= enemyTypes[type].spawnValue;
-                    enemyTypesToSpawn.Add(type);
-                }
-                
-            }
-           
+                > 0f and < 0.6f => (int)EnemyTypeEnum.Small,        // 60%
+                > 0.6f and < 0.8f => (int)EnemyTypeEnum.Large,      // 20%
+                > 0.8f and < 0.9f => (int)EnemyTypeEnum.Ranged,     // 10%
+                > 0.9f and < 1f => (int)EnemyTypeEnum.Bomb,         // 10%
+                _ => 0
+            };
         }
+       
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
@@ -147,29 +153,5 @@ namespace Enemys
         }
         
         #endregion
-        private int GetRandomType()
-        {
-            float rnd = Random.value;
-            float numForAdding = 0f;
-            float total = 0f;
-
-            for (int i = 0; i < enemyTypes.Length; i++)
-            {
-                total += enemyTypes[i].spawnChance;
-            }
-
-            for (int i = 0; i < enemyTypes.Length; i++)
-            {
-                if (enemyTypes[i].spawnChance / total + numForAdding >= rnd)
-                {
-                    return i;
-                }
-                else
-                {
-                    numForAdding += enemyTypes[i].spawnChance / total;
-                }
-            }
-            return 0;
-        }
     }
 }

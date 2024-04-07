@@ -9,7 +9,7 @@ namespace General
         public GameObject Prefab;
         private readonly List<IPooledObject> _inUse = new();
         private readonly List<IPooledObject> _available = new();
-        public bool NewObjectAdded;
+        [HideInInspector] public bool NewObjectAdded;
         
         public IPooledObject GetPooledObject()
         {

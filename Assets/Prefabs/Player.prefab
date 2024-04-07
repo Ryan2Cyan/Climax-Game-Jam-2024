@@ -92,7 +92,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 04481d630debb424ab3fb7325c7f8399, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -154,7 +154,7 @@ Transform:
   - {fileID: 7625442084716637838}
   - {fileID: 1761517190649293667}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3290576767204606299
 MonoBehaviour:
@@ -168,19 +168,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b262693b34b8fa1488d459b8bb383af5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerCamera: {fileID: 0}
   MeleeCentre: {fileID: 804699832556233137}
   Ghosts:
   - {fileID: 4359137801727722040}
   - {fileID: 7819143521267041968}
   - {fileID: 140236457797623832}
   - {fileID: 1784932977677512438}
+  PlayerCameraScript: {fileID: 0}
   Animator: {fileID: 0}
   CursorWorldRaycastScript: {fileID: 0}
-  MaxHealth: 200
+  DamagedMaterial: {fileID: 2100000, guid: 7d92244f8d694654ab43251f3681f6d9, type: 2}
   MeleeRadius: 5
-  RotationSpeed: 8
+  DamagedCooldown: 0.25
+  IFrameDuration: 0.3
+  MaxHealth: 200
   CurrentHealth: 0
+  MeshRenderer: {fileID: 0}
 --- !u!114 &6070858236697469948
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,7 +243,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 04481d630debb424ab3fb7325c7f8399, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

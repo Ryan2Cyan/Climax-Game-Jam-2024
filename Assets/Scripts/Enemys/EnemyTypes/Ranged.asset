@@ -12,13 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5faae6210c1f16444bd70205204688f6, type: 3}
   m_Name: Ranged
   m_EditorClassIdentifier: 
-  health: 1
-  damage: 1
-  speed: 5
-  attackCooldown: 1
-  isRanged: 1
-  rangeRadius: 5
-  explodeOnDeath: 0
-  explosionRadius: 0
-  spawnValue: 5
-  spawnChance: 3
+  Type: 2
+  Material: {fileID: 2100000, guid: b21cc239b8b9cb34a94b3d36033339a2, type: 2}
+  Scale: {x: 1, y: 1, z: 1}
+  Name: Ranged_Enemy
+  Speed: 2
+  AttackCooldown: 1
+  MaxHealth: 20
+  Damage: 10
+  SpawnValue: 3

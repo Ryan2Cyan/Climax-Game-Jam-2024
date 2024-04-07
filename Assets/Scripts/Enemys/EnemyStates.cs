@@ -1,6 +1,5 @@
+using System;
 using Player;
-using System.Collections;
-using General;
 using UnityEngine;
 
 namespace Enemys
@@ -19,147 +18,172 @@ namespace Enemys
             enemy.SetState(enemy.MoveEnemyState);
         }
 
-        public void OnUpdate(Enemy enemy)
-        {
-    
-        }
+        public void OnUpdate(Enemy enemy) { }
 
-        public void OnEnd(Enemy enemy)
-        {
-        }
+        public void OnEnd(Enemy enemy) { }
     } 
     
    public class MoveEnemyState : IEnemyState
    {
-       public void OnStart(Enemy enemy)
-       {
-           if(enemy.EnableDebug) Debug.Log("Enemy (" + enemy.gameObject.name + "): Move");
-
-         
+       private const float _attackRadius = 1.5f;
+        public void OnStart(Enemy enemy)
+        {
+           if(enemy.EnableDebug) Debug.Log("Enemy (" + enemy.gameObject.name + "): <b>[Move]</b>");
         }
 
        public void OnUpdate(Enemy enemy)
        {
-            if (enemy.isRanged)
-            {
-                if (enemy.rangeRadius.CanSeePlayer())
-                {
-                    enemy.SetState(enemy.AttackEnemyState);
-                }
+           // Move towards the target (the player) by step each frame:
+           var step = enemy.Speed * Time.deltaTime;
+           enemy.MoveVector = Vector3.MoveTowards(enemy.transform.position, enemy.CurrentTarget.position, step);
+           enemy.transform.position = enemy.MoveVector;
+           
+           // Face player:
+           enemy.transform.LookAt(PlayerManager.Instance.transform.position);
 
-            }
-
-
-            // Move towards the target (the player) by step each frame:
-            var step = enemy.Speed * Time.deltaTime;
-            enemy.MoveVector = Vector3.MoveTowards(enemy.transform.position, enemy.CurrentTarget.position, step);
-            enemy.transform.position = enemy.MoveVector;
-          
-          
+           var distanceToPlayer = Vector3.Distance(enemy.transform.position, PlayerManager.Instance.transform.position);
+           switch (enemy.Type)
+           {
+               case EnemyManager.EnemyTypeEnum.Small:
+               {
+                   if (distanceToPlayer < _attackRadius) enemy.SetState(enemy.AttackEnemyState);    
+               } break;
+               case EnemyManager.EnemyTypeEnum.Large:
+               {
+                   if (distanceToPlayer < _attackRadius) enemy.SetState(enemy.AttackEnemyState);
+               } break;
+               case EnemyManager.EnemyTypeEnum.Ranged:
+               {
+                   if (distanceToPlayer < enemy.ShootingRadius) enemy.SetState(enemy.ShootEnemyState);  
+               } break;
+               case EnemyManager.EnemyTypeEnum.Bomb:
+               {
+                    
+               } break;
+               default:
+                   throw new ArgumentOutOfRangeException();
+           }
        }
 
-       public void OnEnd(Enemy enemy)
-       {
-        
-       }
+       public void OnEnd(Enemy enemy){ }
    }
    
    public class AttackEnemyState : IEnemyState
    {
-       private float _attackTimer = 0;
-       
+       private float _attackTimer;
+       private const float _cancelRadius = 1.5f;
        public void OnStart(Enemy enemy)
        {
-           if(enemy.EnableDebug) Debug.Log("Enemy (" + enemy.gameObject.name + "): Attack");
-            _attackTimer = 0;
+           if(enemy.EnableDebug) Debug.Log("Enemy (" + enemy.gameObject.name + "): <b>[Attack]</b>");
+           _attackTimer = enemy.AttackCooldown;
         }
 
        public void OnUpdate(Enemy enemy)
        {
-            if (enemy.isRanged)
-            {
-                if (_attackTimer > enemy.AttackCooldown)
-                {
-                    //do bullet stuff here
-                    //var bullet = Object.Instantiate(enemy.bullet, enemy.transform.position, Quaternion.identity, enemy.transform);
-                    var bullet = (Bullet)enemy.bulletPool.GetPooledObject();
-                    if (enemy.bulletPool.NewObjectAdded) enemy.bullets.Add(bullet);
-                    bullet.transform.position = enemy.transform.position;
-                    bullet.GetComponent<Bullet>().InitBullet(enemy.Damage, enemy);
-                    
-                    _attackTimer = 0f;
-                }
-                else _attackTimer += Time.deltaTime;
-
-                if (!enemy.rangeRadius.CanSeePlayer())
-                {
-                    _attackTimer = 0f;
-                    enemy.SetState(enemy.MoveEnemyState);
-                }
-               
-            }
-            else if (enemy.explodeOnDeath)
-            {
-                if (_attackTimer > enemy.AttackCooldown)
-                {
-                    enemy.SetState(enemy.DeathEnemyState);
-                    _attackTimer = 0f;
-                
-                }
-                else _attackTimer += Time.deltaTime;
-            }
-            else
-            {
-                if (_attackTimer > enemy.AttackCooldown)
-                {
-                    PlayerManager.Instance.OnDamaged(enemy.Damage);
-                    _attackTimer = 0f;
-                }
-                else _attackTimer += Time.deltaTime;
-            }
-            
-          
+           var distanceToPlayer = Vector3.Distance(PlayerManager.Instance.transform.position, enemy.transform.position);
+           if(distanceToPlayer > _cancelRadius) enemy.SetState(enemy.MoveEnemyState);
+           if (_attackTimer < 0f)
+           {
+               if (distanceToPlayer < enemy.MeleeRange) PlayerManager.Instance.OnDamaged(enemy.Damage);
+               _attackTimer = enemy.AttackCooldown;
+           }
+           else _attackTimer -= Time.deltaTime;
+           
+            // else if (enemy.explodeOnDeath)
+            // {
+            //     if (_attackTimer > enemy.AttackCooldown)
+            //     {
+            //         enemy.SetState(enemy.DeathEnemyState);
+            //         _attackTimer = 0f;
+            //     
+            //     }
+            //     else _attackTimer += Time.deltaTime;
+            // }
+            // else
+            // {
        }
 
-       public void OnEnd(Enemy enemy)
-       {
-        
-       }
+       public void OnEnd(Enemy enemy) { }
    }
    
    public class DeathEnemyState : IEnemyState
    {
+       private float _timer;
+       private float _matSwapTime;
+       private bool _matSwapped;
+       
        public void OnStart(Enemy enemy)
        {
             if (enemy.EnableDebug) Debug.Log("Enemy (" + enemy.gameObject.name + "): Death");
-            if (enemy.explodeOnDeath)
-            {
-                var playerPos = PlayerManager.Instance.transform.position;
-                if (Vector3.Distance(playerPos, enemy.transform.position) < enemy.explosionRadius)
-                {
-                    PlayerManager.Instance.OnDamaged(enemy.Damage);
-                    Debug.Log("HIT PLAYER!");
-                }
-                enemy.IsAlive = false;
-                EnemyManager.Instance.DespawnEnemy(enemy);
-            }
-            else
-            {
-                enemy.IsAlive = false;
-                EnemyManager.Instance.DespawnEnemy(enemy);
-            }
-           
-          
+            enemy.IsAlive = false;
+            _timer = enemy.DespawnTime;
+            enemy.MeshRenderer.material = enemy.DamagedMaterial;
+            _matSwapTime = enemy.DespawnTime - enemy.DamagedCooldown;
+
+            // if (enemy.explodeOnDeath)
+            // {
+            //     var playerPos = PlayerManager.Instance.transform.position;
+            //     if (Vector3.Distance(playerPos, enemy.transform.position) < enemy.ExplosionRadius)
+            //     {
+            //         PlayerManager.Instance.OnDamaged(enemy.Damage);
+            //         Debug.Log("HIT PLAYER!");
+            //     }
+            //     enemy.IsAlive = false;
+            //     EnemyManager.Instance.DespawnEnemy(enemy);
+            // }
+            // else
+            // {
+            //     enemy.IsAlive = false;
+            //     EnemyManager.Instance.DespawnEnemy(enemy);
+            //
        }
 
        public void OnUpdate(Enemy enemy)
        {
+           _timer -= Time.deltaTime;
            
+           if (!_matSwapped)
+           {
+               if (_timer < _matSwapTime)
+               {
+                   enemy.MeshRenderer.material = enemy.DeadMaterial;
+                   _matSwapped = true;
+               }
+           }
+
+           if(_timer < 0f) EnemyManager.Instance.DespawnEnemy(enemy);
+       }
+       public void OnEnd(Enemy enemy) { }
+   }
+   
+   public class ShootEnemyState : IEnemyState
+   {
+       private float _attackTimer;
+
+       public void OnStart(Enemy enemy)
+       {
+           if(enemy.EnableDebug) Debug.Log("Enemy (" + enemy.gameObject.name + "): <b>[Shoot]</b>");
+           _attackTimer = 0f;
        }
 
-       public void OnEnd(Enemy enemy)
+       public void OnUpdate(Enemy enemy)
        {
-        
+           // Switch back to movement if player goes out of range:
+           if (Vector3.Distance(enemy.transform.position, PlayerManager.Instance.transform.position) >= enemy.ShootingRadius)
+           {
+               enemy.SetState(enemy.MoveEnemyState);  
+           }
+           
+           // Shoot bullet when timer depletes:
+           if (_attackTimer > enemy.AttackCooldown)
+           {
+               var bullet = (Bullet) EnemyManager.Instance.BulletPool.GetPooledObject();
+               bullet.transform.position = enemy.transform.position;
+               bullet.InitBullet(enemy.Damage);
+               _attackTimer = 0f;
+           }
+           else _attackTimer += Time.deltaTime;
        }
+       public void OnEnd(Enemy enemy) { }
    }
 }

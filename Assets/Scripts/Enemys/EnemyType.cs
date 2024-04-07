@@ -1,35 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu]
-[System.Serializable]
-public class EnemyType : ScriptableObject
+namespace Enemys
 {
-    public int health = 10;
-    public int damage = 1;
-    public float speed = 5;
-    public float attackCooldown = 1;
-    [Header("Ranged")]
-    public bool isRanged = false;
-    public float rangeRadius = 5;
-    [Header("Explode On Death")]
-    public bool explodeOnDeath = false;
-    public float explosionRadius = 5;
-    [Header("Spawn Parameters")]
-    public int spawnValue;
-    public float spawnChance;
-    public EnemyType(int health, int damage, float speed, float attackCooldown, bool isRanged,float rangeRadius,bool explodeOnDeath,float explosionRadius, int spawnValue, float spawnChance)
+    [CreateAssetMenu]
+    [System.Serializable]
+    public class EnemyType : ScriptableObject
     {
-        this.health = health;
-        this.damage = health;
-        this.speed = speed;
-        this.attackCooldown = attackCooldown;
-        this.isRanged = isRanged;
-        this.rangeRadius = rangeRadius;
-        this.explodeOnDeath = explodeOnDeath;
-        this.explosionRadius = explosionRadius;
-        this.spawnValue = spawnValue;
-        this.spawnChance = spawnChance;
+        public EnemyManager.EnemyTypeEnum Type;
+        public Material Material;
+        public Vector3 Scale;
+        public string Name;
+        public float Speed;
+        public float AttackCooldown;
+        public float MeleeRange;
+        public int MaxHealth;
+        public int Damage;
+        public int SpawnValue;
+        
+        public EnemyType(EnemyManager.EnemyTypeEnum type, Material material, Vector3 scale, string name, int maxHealth, 
+            int damage, float speed, float meleeRange, float attackCooldown, int spawnValue)
+        {
+            Type = type;
+            Material = material;
+            Scale = scale;
+            Name = name;
+            Speed = speed;
+            AttackCooldown = attackCooldown;
+            MeleeRange = meleeRange;
+            MaxHealth = maxHealth;
+            Damage = damage;
+            SpawnValue = spawnValue;
+        }
     }
 }

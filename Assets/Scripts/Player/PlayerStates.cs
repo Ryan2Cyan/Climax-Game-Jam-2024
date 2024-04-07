@@ -45,8 +45,14 @@ namespace Player
 
         public void OnDamaged(PlayerManager player, int damage)
         {
+            Debug.Log("Player Damaged");
             player.CurrentHealth -= damage;
             if (player.CurrentHealth <= 0) player.OnDeath();
+            else
+            {
+                player.StartCoroutine(player.DamageShaderSwap(player.DamagedCooldown));
+                player.StartCoroutine(player.IFrames());
+            }
         }
 
         public void OnEnd(PlayerManager player)

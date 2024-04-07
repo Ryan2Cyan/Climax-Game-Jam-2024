@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using General;
 using Inputs;
@@ -17,18 +18,23 @@ namespace Player
         [HideInInspector] public CursorWorldRaycast CursorWorldRaycastScript;
         
         [Header("Player Settings")]
-        public int MaxHealth = 200;
+        public Material DamagedMaterial;
         public float MeleeRadius;
+        public float DamagedCooldown = 0.25f;
+        public float IFrameDuration;
+        public int MaxHealth = 200;
         
         [HideInInspector] public float CurrentHealth;
+        [HideInInspector] public MeshRenderer MeshRenderer;
 
+        private Material _defaultMaterial;
+        private IPlayerSpellState _currentState;
+        private Vector3 _targetDirection;
         private Vector2 _previousMousePosition;
         private float _movementVelocity;
-        private IPlayerSpellState _currentState;
         private float _prevAngle;
-        
-        private Vector3 _targetDirection;
         private float _rotateStartTime;
+        private bool _playerIFrames;
         
         // Player states:
         private readonly ArcaneWeaponPlayerState _arcaneWeapon = new();
@@ -42,6 +48,10 @@ namespace Player
             CursorWorldRaycastScript = GetComponent<CursorWorldRaycast>();
             _currentState = _arcaneWeapon;
             CurrentHealth = MaxHealth;
+            
+            MeshRenderer = GetComponent<MeshRenderer>();
+            _defaultMaterial = MeshRenderer.material;
+            MeshRenderer.material = new Material(_defaultMaterial);
         }
 
         private void Update()
@@ -73,12 +83,40 @@ namespace Player
 
         public void OnDamaged(int damage)
         {
-            _currentState.OnDamaged(this, damage);
+            if(!_playerIFrames) _currentState.OnDamaged(this, damage);
         }
 
         public void OnDeath()
         {
             
+        }
+        
+        public IEnumerator DamageShaderSwap(float duration)
+        {
+            var elapsedTime = duration;
+            MeshRenderer.material = new Material(DamagedMaterial);
+            while (elapsedTime > 0f)
+            {
+                elapsedTime -= Time.deltaTime;
+                yield return null;
+            }
+
+            MeshRenderer.material = new Material(_defaultMaterial);
+            yield return null;
+        }
+
+        public IEnumerator IFrames()
+        {
+            var elapsedTime = IFrameDuration;
+            _playerIFrames = true;
+            while (elapsedTime > 0f)
+            {
+                elapsedTime -= Time.deltaTime;
+                yield return null;
+            }
+
+            _playerIFrames = false;
+            yield return null;
         }
         
 

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using General;
 using Player;
 using UnityEngine;
@@ -10,23 +9,26 @@ namespace Enemys
     public class Enemy : MonoBehaviour, IPooledObject
     {
         [Header("Enemy Stats")]
-        public int MaxHealth = 250;
+        public int MaxHealth;
         public float Speed;
         public int Damage;
         public float AttackCooldown;
-        public float DamagedCooldown = 0.25f;
-        public float GhostTargetShiftCooldown = 1f;
-        public bool EnableDebug = true;
-        public bool isRanged;
-        public bool explodeOnDeath;
-        public float explosionRadius;
+        public EnemyManager.EnemyTypeEnum Type;
 
         [Header("Settings")]
-        public Material DefaultMaterial;
         public Material DamagedMaterial;
+        public Material DeadMaterial;
+        public float GhostTargetShiftCooldown = 1f;
+        public float DamagedCooldown = 0.25f;
+        public float MeleeRange;
+        public float ExplosionRadius;
+        public float ShootingRadius;
+        public float DespawnTime;
+        public bool EnableDebug = true;
 
         [HideInInspector] public Vector3 MoveVector;
         [HideInInspector] public Transform CurrentTarget;
+        [HideInInspector] public MeshRenderer MeshRenderer;
         [HideInInspector] public float CurrentHealth;
         [HideInInspector] public bool IsAlive = true;
         
@@ -34,18 +36,12 @@ namespace Enemys
         public readonly MoveEnemyState MoveEnemyState = new();
         public readonly AttackEnemyState AttackEnemyState = new();
         public readonly DeathEnemyState DeathEnemyState = new();
-
-        public RangedRadius rangeRadius;
-        public GameObject bullet;
-        public ObjectPool bulletPool;
-        public List<Bullet> bullets = new ();
-
+        public readonly ShootEnemyState ShootEnemyState = new();
+        
         private float _targetUpdateTimer;
-        private MeshRenderer _meshRenderer;
+        private Material _defaultMaterial;
         private IEnumerator _currentCoroutine;
-
-        public int enemyTypeIndex;
-        public EnemyType enemyType;
+        
         // States:
         private IEnemyState _currentState;
         
@@ -107,11 +103,27 @@ namespace Enemys
             CurrentTarget = PlayerManager.Instance.transform;
             
             // Create a new instance of mesh renderer's material:
-            _meshRenderer = GetComponent<MeshRenderer>();
-            var material = _meshRenderer.material;
-            _meshRenderer.material = new Material(material);
+            MeshRenderer = GetComponent<MeshRenderer>();
+            var material = MeshRenderer.material;
+            MeshRenderer.material = new Material(material);
         }
-
+        
+        public void SetEnemyType(EnemyType newEnemyType)
+        {
+            Type = newEnemyType.Type;
+            _defaultMaterial = newEnemyType.Material;
+            MeshRenderer.material = new Material(newEnemyType.Material);
+            transform.localScale = newEnemyType.Scale;
+            name = newEnemyType.Name;
+            MeleeRange = newEnemyType.MeleeRange;
+            MaxHealth = newEnemyType.MaxHealth;
+            Damage = newEnemyType.Damage;
+            Speed = newEnemyType.Speed;
+            AttackCooldown = newEnemyType.AttackCooldown;
+            Damage = newEnemyType.Damage;
+            CurrentHealth = MaxHealth;
+        }
+        
         public void Release()
         {
             gameObject.SetActive(false);
@@ -123,6 +135,7 @@ namespace Enemys
 
         public void OnDamage(int damage)
         {
+            if (!IsAlive) return; 
             if(EnableDebug) Debug.Log("Enemy (" + gameObject.name + "): Damaged");
             CurrentHealth -= damage;
             if (CurrentHealth <= 0) SetState(DeathEnemyState);
@@ -153,65 +166,17 @@ namespace Enemys
         private IEnumerator DamageShaderSwap(float duration)
         {
             var elapsedTime = duration;
-            _meshRenderer.material = new Material(DamagedMaterial);
+            MeshRenderer.material = new Material(DamagedMaterial);
             while (elapsedTime > 0f)
             {
                 elapsedTime -= Time.deltaTime;
                 yield return null;
             }
 
-            _meshRenderer.material = new Material(DefaultMaterial);
+            MeshRenderer.material = new Material(_defaultMaterial);
             yield return null;
         }
-       public void SetEnemyType(EnemyType newEnemyType)
-        {
-            enemyType = newEnemyType;
-
-            MaxHealth = newEnemyType.health;
-            Damage = newEnemyType.damage;
-            Speed = newEnemyType.speed;
-            AttackCooldown = newEnemyType.attackCooldown;
-            Damage = newEnemyType.damage;
-            isRanged = newEnemyType.isRanged;
-            explodeOnDeath = newEnemyType.explodeOnDeath;
-            explosionRadius = newEnemyType.explosionRadius;
-
-            CurrentHealth = MaxHealth;
-
-            switch (enemyTypeIndex)
-            {
-                case 0: //small
-                    {
-                        transform.localScale = new Vector3(1, 1, 1);
-                        name = "SmallEnemy";
-                    }
-                    break;
-                case 1: //large
-                    {
-                        transform.localScale = new Vector3(2, 2, 2);
-                        name = "LargeEnemy";
-                    }
-                    break;
-                case 2: //ranged
-                    {
-                        transform.localScale = new Vector3(1, 2, 1);
-                        name = "RangedEnemy";
-                    }
-                    break;
-                case 3: //bomb
-                    {
-                        transform.localScale = new Vector3(1, 0.5f, 1);
-                        name = "BombEnemy";
-                    }
-                    break;
-
-            }
-        }
-        public void DespawnBullet(Bullet bullet)
-        {
-            bulletPool.ReleasePooledObject(bullet);
-        }
-
+        
         #endregion
     }
 }

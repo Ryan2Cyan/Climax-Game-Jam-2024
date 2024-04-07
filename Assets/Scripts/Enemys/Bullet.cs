@@ -1,63 +1,55 @@
-using System.Collections;
-using System.Collections.Generic;
 using General;
 using Player;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour, IPooledObject
+namespace Enemys
 {
-    public float speed = 5;
-    public int damage = 1;
-    public float bulletLifespan = 2;
-    private float lifespan;
-    private Enemys.Enemy bulletOwner;
-  
-    Vector3 direction;
-    public void Instantiate()
+    public class Bullet : MonoBehaviour, IPooledObject
     {
-        lifespan = bulletLifespan;
-        transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-    }
-    public void InitBullet(int newDamage, Enemys.Enemy newBulletOwner)
-    {
-        bulletOwner = newBulletOwner;
-        damage = newDamage;
-        var target = PlayerManager.Instance.transform.position;
-        direction = (target - transform.position).normalized;
-    }
+        [Header("Settings")] 
+        public float Radius = 3;
+        public float Speed = 5;
+        public float BulletLifespan = 2;
+        public int Damage = 1;
+        
+        private float _lifespan;
+        private Vector3 _direction;
 
+        #region UnityFunctions
 
-    void Update()
-    {
-        transform.Translate(direction * speed * Time.deltaTime);
-
-        if (lifespan < 0)
+        private void Update()
         {
-            bulletOwner.DespawnBullet(this);
+            transform.Translate(_direction * (Speed * Time.deltaTime));
+            if (_lifespan < 0) EnemyManager.Instance.BulletPool.ReleasePooledObject(this);
+            else _lifespan -= Time.deltaTime;
 
+            if (!(Vector3.Distance(PlayerManager.Instance.transform.position, transform.position) < Radius)) return;
+            PlayerManager.Instance.OnDamaged(Damage);
+            EnemyManager.Instance.BulletPool.ReleasePooledObject(this); ;
         }
-        else
+
+        #endregion
+
+        #region PublicFunctions
+
+        public void Instantiate()
         {
-            lifespan -= Time.deltaTime;
+            _lifespan = BulletLifespan;
+            transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-
-        switch (other.gameObject.tag)
+        
+        public void InitBullet(int newDamage)
         {
-            case "Player":
-                {
-                    PlayerManager.Instance.OnDamaged(damage);
-                }
-                break;
-
+            Damage = newDamage;
+            var target = PlayerManager.Instance.transform.position;
+            _direction = (target - transform.position).normalized;
         }
-    }
-    public void Release()
-    {
-        gameObject.SetActive(false);
-    }
+        
+        public void Release()
+        {
+            gameObject.SetActive(false);
+        }
 
+        #endregion
+    }
 }

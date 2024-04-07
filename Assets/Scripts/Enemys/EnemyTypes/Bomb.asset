@@ -12,13 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5faae6210c1f16444bd70205204688f6, type: 3}
   m_Name: Bomb
   m_EditorClassIdentifier: 
-  health: 2
-  damage: 10
-  speed: 10
-  attackCooldown: 1
-  isRanged: 0
-  rangeRadius: 0
-  explodeOnDeath: 1
-  explosionRadius: 5
-  spawnValue: 5
-  spawnChance: 2
+  Type: 3
+  Material: {fileID: 2100000, guid: c700c8f8d3fea3e4db95f9286c39821c, type: 2}
+  Scale: {x: 1, y: 1, z: 1}
+  Name: Bomb_Enemy
+  Speed: 10
+  AttackCooldown: 1
+  MaxHealth: 2
+  Damage: 10
+  SpawnValue: 5

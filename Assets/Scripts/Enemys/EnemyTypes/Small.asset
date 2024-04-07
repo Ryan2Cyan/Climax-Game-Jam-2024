@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5faae6210c1f16444bd70205204688f6, type: 3}
   m_Name: Small
   m_EditorClassIdentifier: 
-  health: 1
-  damage: 1
-  speed: 5
-  attackCooldown: 0.5
-  isRanged: 0
-  rangeRadius: 0
-  explodeOnDeath: 0
-  explosionRadius: 0
-  spawnValue: 1
-  spawnChance: 6
+  Type: 0
+  Material: {fileID: 2100000, guid: bcd87915d225ed74c91180313dd85010, type: 2}
+  Scale: {x: 1, y: 1, z: 1}
+  Name: Small_Enemy
+  Speed: 3
+  AttackCooldown: 0.1
+  MeleeRange: 1.5
+  MaxHealth: 20
+  Damage: 5
+  SpawnValue: 1
