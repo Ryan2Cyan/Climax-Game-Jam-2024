@@ -14,6 +14,7 @@ namespace Player
         public Transform MeleeCentre;
         public List<GameObject> Ghosts = new();
         public PlayerCamera PlayerCameraScript;
+        public Animator BalthazarAnimator;
         [HideInInspector] public Animator Animator;
         [HideInInspector] public CursorWorldRaycast CursorWorldRaycastScript;
         
@@ -62,9 +63,9 @@ namespace Player
             _currentState = _arcaneWeapon;
             CurrentHealth = MaxHealth;
             
-            MeshRenderer = GetComponent<MeshRenderer>();
-            _defaultMaterial = MeshRenderer.material;
-            MeshRenderer.material = new Material(_defaultMaterial);
+            // MeshRenderer = GetComponent<MeshRenderer>();
+            // _defaultMaterial = MeshRenderer.material;
+            // MeshRenderer.material = new Material(_defaultMaterial);
         }
 
         private void Update()
@@ -130,19 +131,19 @@ namespace Player
             
         }
         
-        public IEnumerator DamageShaderSwap(float duration)
-        {
-            var elapsedTime = duration;
-            MeshRenderer.material = new Material(DamagedMaterial);
-            while (elapsedTime > 0f)
-            {
-                elapsedTime -= Time.deltaTime;
-                yield return null;
-            }
-
-            MeshRenderer.material = new Material(_defaultMaterial);
-            yield return null;
-        }
+        // public IEnumerator DamageShaderSwap(float duration)
+        // {
+        //     var elapsedTime = duration;
+        //     MeshRenderer.material = new Material(DamagedMaterial);
+        //     while (elapsedTime > 0f)
+        //     {
+        //         elapsedTime -= Time.deltaTime;
+        //         yield return null;
+        //     }
+        //
+        //     MeshRenderer.material = new Material(_defaultMaterial);
+        //     yield return null;
+        // }
 
         public IEnumerator IFrames()
         {

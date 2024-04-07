@@ -48,7 +48,7 @@ namespace Player
             if (player.CurrentHealth <= 0) player.OnDeath();
             else
             {
-                player.StartCoroutine(player.DamageShaderSwap(player.DamagedCooldown));
+                // player.StartCoroutine(player.DamageShaderSwap(player.DamagedCooldown));
                 player.StartCoroutine(player.IFrames());
             }
         }
@@ -74,7 +74,7 @@ namespace Player
             if (player.CurrentHealth <= 0) player.OnDeath();
             else
             {
-                player.StartCoroutine(player.DamageShaderSwap(player.DamagedCooldown));
+                // player.StartCoroutine(player.DamageShaderSwap(player.DamagedCooldown));
                 player.StartCoroutine(player.IFrames());
             }
         }
