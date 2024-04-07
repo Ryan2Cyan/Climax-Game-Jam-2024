@@ -18,11 +18,16 @@ namespace General
         public void OnStart(GameplayManager gameplayManager)
         {
             if(gameplayManager.DebugActive) Debug.Log("Gameplay State: <b>BootUp</b>");
+
+            
         }
 
         public void OnUpdate(GameplayManager gameplayManager) { }
         public void OnEnd(GameplayManager gameplayManager) { }
-        public void OnSceneLoaded(Scene scene, LoadSceneMode mode) { }
+        public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            
+        }
         public void OnPause(GameplayManager gameplayManager) { }
     }
     
@@ -32,6 +37,10 @@ namespace General
         {
             if(gameplayManager.DebugActive) Debug.Log("Gameplay State: <b>Main Menu</b>");
             SceneManager.ChangeScene(SceneManager.Scene.MainMenu);
+
+            gameplayManager.audioManager.Play("MainMenuMusic");
+            gameplayManager.audioManager.StopPlaying("GameplayMusic");
+
         }
 
         public void OnUpdate(GameplayManager gameplayManager) { }
@@ -61,7 +70,13 @@ namespace General
         {
             if(gameplayManager.DebugActive) Debug.Log("Gameplay State: <b>Start</b>");
             SceneManager.ChangeScene(SceneManager.Scene.Game);
+
+
+            gameplayManager.audioManager.Play("GameplayMusic");
+            gameplayManager.audioManager.StopPlaying("MainMenuMusic");
+
             gameplayManager.SpellChangeTimer = gameplayManager.SpellChangeInterval;
+
         }
 
         public void OnUpdate(GameplayManager gameplayManager) { }

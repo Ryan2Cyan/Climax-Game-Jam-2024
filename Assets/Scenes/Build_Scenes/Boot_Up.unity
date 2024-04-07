@@ -851,8 +851,92 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7675489142169314318, guid: 8583da0050bf0d742935f8e25c8973be, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 1706466034}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8583da0050bf0d742935f8e25c8973be, type: 3}
+--- !u!1 &1706466033
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1706466035}
+  - component: {fileID: 1706466034}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1706466034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706466033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1429f1007ead2cd4e9cef96cb3423311, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: MainMenuMusic
+    clip: {fileID: 8300000, guid: 63a9ee605b70a774b8b379c4fdf800c3, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    isPlaying: 0
+    source: {fileID: 0}
+  - name: GameplayMusic
+    clip: {fileID: 8300000, guid: 25f63fd8b3c6f1a43a91581d6caf13cc, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    isPlaying: 0
+    source: {fileID: 0}
+  - name: ArcaneWeapon
+    clip: {fileID: 8300000, guid: bf627fc3a88878a41b0d7ddebe1be25d, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    isPlaying: 0
+    source: {fileID: 0}
+  - name: ConeOfCold
+    clip: {fileID: 8300000, guid: 73470e10ede2b6546b7ab948b753de3f, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    isPlaying: 0
+    source: {fileID: 0}
+  - name: FireWall
+    clip: {fileID: 8300000, guid: f26e9a5793b818c41b8612eba93101a0, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    isPlaying: 0
+    source: {fileID: 0}
+--- !u!4 &1706466035
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706466033}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
