@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 1
   Material: {fileID: 2100000, guid: d98b2c4e5dbf21c46bcf502a4363c22b, type: 2}
-  Scale: {x: 1, y: 1, z: 1}
+  Scale: {x: 2.5, y: 2.5, z: 2.5}
   Name: Large_Enemey
   Speed: 2
   AttackCooldown: 0.2

@@ -14,6 +14,7 @@ namespace Player
         public Transform MeleeCentre;
         public List<GameObject> Ghosts = new();
         public PlayerCamera PlayerCameraScript;
+        public Animator BalthazarAnimator;
         [HideInInspector] public Animator Animator;
         [HideInInspector] public CursorWorldRaycast CursorWorldRaycastScript;
         
@@ -26,6 +27,7 @@ namespace Player
         public float DamagedCooldown = 0.25f;
         public float IFrameDuration;
         public int MaxHealth = 200;
+        public bool DebugActive;
         
         [Header("Arcane Weapon")]
         public int ArcaneWeaponDamage;
@@ -51,6 +53,7 @@ namespace Player
         
         // Player states:
         private readonly ArcaneWeaponPlayerState _arcaneWeapon = new();
+        private readonly FireWallPlayerState _fireWall = new();
         
         #region UnityFunctions
 
@@ -64,9 +67,9 @@ namespace Player
             _currentState = _arcaneWeapon;
             CurrentHealth = MaxHealth;
             
-            MeshRenderer = GetComponent<MeshRenderer>();
-            _defaultMaterial = MeshRenderer.material;
-            MeshRenderer.material = new Material(_defaultMaterial);
+            // MeshRenderer = GetComponent<MeshRenderer>();
+            // _defaultMaterial = MeshRenderer.material;
+            // MeshRenderer.material = new Material(_defaultMaterial);
         }
 
         private void Update()
@@ -97,6 +100,31 @@ namespace Player
             _currentState.OnStart(this);
         }
 
+        public void ChangeSpell()
+        {
+            var gettingNewSpell = true;
+            while (gettingNewSpell)
+            {
+                var random = Random.Range(0, 2);
+                switch (random)
+                {
+                    case 0:
+                    {
+                        if(_currentState == _arcaneWeapon) continue;
+                        ChangeState(_arcaneWeapon);
+                        gettingNewSpell = false;
+                    }
+                        break;
+                    case 1:
+                    {
+                        if(_currentState == _fireWall) continue;
+                        ChangeState(_fireWall);
+                        gettingNewSpell = false;
+                    } break;
+                }
+            }
+        }
+
         public void OnDamaged(int damage)
         {
             if(!_playerIFrames) _currentState.OnDamaged(this, damage);
@@ -107,19 +135,19 @@ namespace Player
             
         }
         
-        public IEnumerator DamageShaderSwap(float duration)
-        {
-            var elapsedTime = duration;
-            MeshRenderer.material = new Material(DamagedMaterial);
-            while (elapsedTime > 0f)
-            {
-                elapsedTime -= Time.deltaTime;
-                yield return null;
-            }
-
-            MeshRenderer.material = new Material(_defaultMaterial);
-            yield return null;
-        }
+        // public IEnumerator DamageShaderSwap(float duration)
+        // {
+        //     var elapsedTime = duration;
+        //     MeshRenderer.material = new Material(DamagedMaterial);
+        //     while (elapsedTime > 0f)
+        //     {
+        //         elapsedTime -= Time.deltaTime;
+        //         yield return null;
+        //     }
+        //
+        //     MeshRenderer.material = new Material(_defaultMaterial);
+        //     yield return null;
+        // }
 
         public IEnumerator IFrames()
         {

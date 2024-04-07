@@ -20,6 +20,7 @@ namespace Player
         
         public void OnStart(PlayerManager player)
         {
+            if(player.DebugActive) Debug.Log("New Spell: <b>[Arcane Weapon]</b>");
             _cooldownTimer = player.ArcaneWeaponCooldown;
         }
 
@@ -48,7 +49,7 @@ namespace Player
             if (player.CurrentHealth <= 0) player.OnDeath();
             else
             {
-                player.StartCoroutine(player.DamageShaderSwap(player.DamagedCooldown));
+                // player.StartCoroutine(player.DamageShaderSwap(player.DamagedCooldown));
                 player.StartCoroutine(player.IFrames());
             }
         }
@@ -63,6 +64,7 @@ namespace Player
     {
         public void OnStart(PlayerManager player)
         {
+            if(player.DebugActive) Debug.Log("New Spell: <b>[Fire Wall]</b>");
             player.FireWall.SetActive(true);
         }
         public void OnUpdate(PlayerManager player) { }
@@ -73,7 +75,7 @@ namespace Player
             if (player.CurrentHealth <= 0) player.OnDeath();
             else
             {
-                player.StartCoroutine(player.DamageShaderSwap(player.DamagedCooldown));
+                // player.StartCoroutine(player.DamageShaderSwap(player.DamagedCooldown));
                 player.StartCoroutine(player.IFrames());
             }
         }
