@@ -91,12 +91,16 @@ namespace Player
         public void OnStart(PlayerManager player)
         {
             if(player.DebugActive) Debug.Log("New Spell: <b>[Invisibility]</b>");
-            player.FireWall.SetActive(true);
+            foreach (var enemy in EnemyManager.Instance.AllEnemies) enemy.ToggleInvisible(true);
         }
         public void OnUpdate(PlayerManager player) { }
         public void OnAttack(PlayerManager player) { }
         public void OnDamaged(PlayerManager player, int damage) { }
-        public void OnEnd(PlayerManager player) { }
+
+        public void OnEnd(PlayerManager player)
+        {
+            foreach (var enemy in EnemyManager.Instance.AllEnemies) enemy.ToggleInvisible(false);
+        }
     }
     
     public class EldritchPlayerState : IPlayerSpellState
@@ -104,11 +108,16 @@ namespace Player
         public void OnStart(PlayerManager player)
         {
             if(player.DebugActive) Debug.Log("New Spell: <b>[Eldritch Blast]</b>");
+            player.FireEldritchBlast.SetActive(true);
         }
         public void OnUpdate(PlayerManager player) { }
         public void OnAttack(PlayerManager player) { }
         public void OnDamaged(PlayerManager player, int damage) { }
-        public void OnEnd(PlayerManager player) { }
+
+        public void OnEnd(PlayerManager player)
+        {
+            player.FireEldritchBlast.SetActive(false);
+        }
     }
     
     public class HealingWordPlayerState : IPlayerSpellState

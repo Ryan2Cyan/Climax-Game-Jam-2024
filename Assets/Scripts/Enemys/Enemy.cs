@@ -58,6 +58,7 @@ namespace Enemys
         
         private void Update()
         {
+            _rigidbody.velocity = Vector3.zero;
             if (GameplayManager.Instance.Paused) return;
             TargetUpdate();
             _currentState.OnUpdate(this);
@@ -115,11 +116,23 @@ namespace Enemys
             gameObject.SetActive(false);
         }
 
+        public void ToggleInvisible(bool toggle)
+        {
+            if (!IsAlive) return;
+            Animator.gameObject.SetActive(!toggle);
+        }
+
         private void OnTriggerEnter(Collider other)
         {
-            if (!other.gameObject.CompareTag("FireWall")) return;
-            _inFireWall = true;
-            StartCoroutine(InsideFireWall());
+            if (other.gameObject.CompareTag("FireWall"))
+            {
+                _inFireWall = true;
+                StartCoroutine(InsideFireWall());
+            }
+            else if (other.gameObject.CompareTag("EldritchBlast"))
+            {
+                SetState(DeathEnemyState);
+            }
         }
 
         private void OnTriggerExit(Collider other)
