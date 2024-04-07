@@ -69,13 +69,6 @@ namespace General
         public void OnStart(GameplayManager gameplayManager)
         {
             if(gameplayManager.DebugActive) Debug.Log("Gameplay State: <b>Start</b>");
-            SceneManager.ChangeScene(SceneManager.Scene.Game);
-
-
-            gameplayManager.audioManager.Play("GameplayMusic");
-            gameplayManager.audioManager.StopPlaying("MainMenuMusic");
-
-            gameplayManager.SpellChangeTimer = gameplayManager.SpellChangeInterval;
 
         }
 
@@ -101,15 +94,23 @@ namespace General
     
     public class PlayingGameplayState : IGameplayState
     {
+        private bool _sceneLoaded;
         public void OnStart(GameplayManager gameplayManager)
         {
             if(gameplayManager.DebugActive) Debug.Log("Gameplay State: <b>Playing</b>");
-            WaveManager.Instance.ToggleActive(true);
-            UIManager.Instance.Open();
+            SceneManager.ChangeScene(SceneManager.Scene.Game);
+
+
+            gameplayManager.audioManager.Play("GameplayMusic");
+            gameplayManager.audioManager.StopPlaying("MainMenuMusic");
+
+            gameplayManager.SpellChangeTimer = gameplayManager.SpellChangeInterval;
+            _sceneLoaded = false;
         }
 
         public void OnUpdate(GameplayManager gameplayManager)
         {
+            if (!_sceneLoaded) return;
             if (gameplayManager.SpellChangeTimer <= 0)
             {
                 if (PlayerManager.Instance)
@@ -121,8 +122,7 @@ namespace General
                 gameplayManager.SpellChangeTimer = gameplayManager.SpellChangeInterval;
             }
             else gameplayManager.SpellChangeTimer -= Time.deltaTime;
-            if (UIManager.Instance)
-            UIManager.Instance.SpellCountDown.text = ((int)gameplayManager.SpellChangeTimer).ToString();
+            if (UIManager.Instance) UIManager.Instance.SpellCountDown.text = ((int)gameplayManager.SpellChangeTimer).ToString();
         }
 
         public void OnEnd(GameplayManager gameplayManager)
@@ -135,7 +135,12 @@ namespace General
                 UIManager.Instance.Close();
         }
 
-        public void OnSceneLoaded(Scene scene, LoadSceneMode mode) { }
+        public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            WaveManager.Instance.ToggleActive(true);
+            UIManager.Instance.Open();
+            _sceneLoaded = true;
+        }
 
         public void OnPause(GameplayManager gameplayManager)
         {
