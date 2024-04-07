@@ -1,3 +1,4 @@
+using General;
 using Inputs;
 using UnityEngine;
 
@@ -14,6 +15,8 @@ namespace Player
 
         private void FixedUpdate()
         {
+            if (GameplayManager.Instance.Paused) return;
+            
             var playerPosition = transform.position;
             var movementVector = InputManager.Instance.Movement * (Speed * Time.deltaTime);
             var desiredPosition = new Vector3(playerPosition.x + movementVector.x, playerPosition.y, playerPosition.z + movementVector.y);

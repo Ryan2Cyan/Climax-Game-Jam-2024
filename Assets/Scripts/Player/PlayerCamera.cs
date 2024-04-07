@@ -1,3 +1,4 @@
+using General;
 using UnityEngine;
 
 namespace Player
@@ -14,6 +15,8 @@ namespace Player
 
         private void FixedUpdate()
         {
+            if (GameplayManager.Instance.Paused) return;
+            
             var desiredPosition = Target.position + Offset;
             var smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, SmoothSpeed * Time.deltaTime);
             transform.position = smoothedPosition;

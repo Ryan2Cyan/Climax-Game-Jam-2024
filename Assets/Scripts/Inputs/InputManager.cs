@@ -12,6 +12,7 @@ namespace Inputs
 
         public delegate void InputActionDelegate();
         public static event InputActionDelegate OnMouseDown;
+        public static event InputActionDelegate OnPause;
 
         private InputActions _inputs;
 
@@ -28,6 +29,7 @@ namespace Inputs
             _inputs.Player.Enable();
 
             _inputs.Player.MouseDown.performed += MouseDown;
+            _inputs.Player.Pause.performed += Pause;
         }
 
         private void OnDisable()
@@ -35,6 +37,7 @@ namespace Inputs
             _inputs.Player.Disable();
             
             _inputs.Player.MouseDown.performed -= MouseDown;
+            _inputs.Player.Pause.performed -= Pause;
         }
 
         private void FixedUpdate()
@@ -48,6 +51,7 @@ namespace Inputs
         #region EventInvokers
 
         private static void MouseDown(InputAction.CallbackContext context) { OnMouseDown?.Invoke(); }
+        private static void Pause(InputAction.CallbackContext context) { OnPause?.Invoke(); }
 
     #endregion
     }

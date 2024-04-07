@@ -56,6 +56,7 @@ namespace Player
 
         private void Update()
         {
+            if (GameplayManager.Instance.Paused) return;
             _currentState.OnUpdate(this);
             CursorWorldRaycastScript.GetCursorDirection();
         }

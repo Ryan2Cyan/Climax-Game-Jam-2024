@@ -49,6 +49,7 @@ namespace Enemys
         
         private void Update()
         {
+            if (GameplayManager.Instance.Paused) return;
             TargetUpdate();
             _currentState.OnUpdate(this);
         }

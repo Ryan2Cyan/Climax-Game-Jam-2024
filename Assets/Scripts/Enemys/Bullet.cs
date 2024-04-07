@@ -19,6 +19,7 @@ namespace Enemys
 
         private void Update()
         {
+            if(GameplayManager.Instance.Paused) return;
             transform.Translate(_direction * (Speed * Time.deltaTime));
             if (_lifespan < 0) EnemyManager.Instance.BulletPool.ReleasePooledObject(this);
             else _lifespan -= Time.deltaTime;

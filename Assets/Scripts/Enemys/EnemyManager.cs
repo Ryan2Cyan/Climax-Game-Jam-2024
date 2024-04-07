@@ -73,21 +73,26 @@ namespace Enemys
             
             while (spawnCurrency > 0)
             {
-                elapsedTime -= Time.deltaTime;
-                if (elapsedTime < 0f)
+                if (!GameplayManager.Instance.Paused)
                 {
-                    var type = GetRandomType();
-                    if (DebugActive) Debug.Log("Spawn Enemy: <b>[" + (EnemyTypeEnum)type + "]</b>");
-                    var enemyValue = enemyTypes[type].SpawnValue;
-                    var newTotal = spawnCurrency - enemyValue;
-                    if (newTotal > 0)
+                    elapsedTime -= Time.deltaTime;
+                    if (elapsedTime < 0f)
                     {
-                        spawnCurrency -= enemyValue;
-                        Spawn(type);
+                        var type = GetRandomType();
+                        if (DebugActive) Debug.Log("Spawn Enemy: <b>[" + (EnemyTypeEnum)type + "]</b>");
+                        var enemyValue = enemyTypes[type].SpawnValue;
+                        var newTotal = spawnCurrency - enemyValue;
+                        if (newTotal > 0)
+                        {
+                            spawnCurrency -= enemyValue;
+                            Spawn(type);
+                        }
+                        else spawnCurrency--;
+
+                        elapsedTime = timePerSpawn;
                     }
-                    else spawnCurrency--;
-                    elapsedTime = timePerSpawn;
                 }
+
                 yield return null;
             }
             yield return null;
@@ -140,8 +145,8 @@ namespace Enemys
             {
                 > 0f and < 0.6f => (int)EnemyTypeEnum.Small,        // 60%
                 > 0.6f and < 0.8f => (int)EnemyTypeEnum.Large,      // 20%
-                > 0.8f and < 0.9f => (int)EnemyTypeEnum.Ranged,     // 10%
-                > 0.9f and < 1f => (int)EnemyTypeEnum.Bomb,         // 10%
+                > 0.8f and < 1f => (int)EnemyTypeEnum.Ranged,     // 20%
+                // > 0.9f and < 1f => (int)EnemyTypeEnum.Bomb,         // 10%
                 _ => 0
             };
         }

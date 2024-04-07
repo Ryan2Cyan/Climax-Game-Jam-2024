@@ -1,4 +1,5 @@
 using System;
+using Inputs;
 using UnityEngine;
 
 namespace General
@@ -50,6 +51,16 @@ namespace General
                 GameplayState.GameOver => GameOverState,
                 _ => throw new ArgumentOutOfRangeException()
             };
+        }
+
+        private void OnEnable()
+        {
+            InputManager.OnPause += OnPause;
+        }
+
+        private void OnDisable()
+        {
+            InputManager.OnPause -= OnPause;
         }
 
         #endregion
@@ -105,6 +116,15 @@ namespace General
             _currentState = state;
             _currentState.OnStart(this);
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += _currentState.OnSceneLoaded;
+        }
+
+        #endregion
+
+        #region PrivateFunctions
+
+        private void OnPause()
+        {
+            _currentState.OnPause(this);
         }
 
         #endregion
