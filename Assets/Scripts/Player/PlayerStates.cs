@@ -86,4 +86,41 @@ namespace Player
         }
     }
     
+    public class InvisibilityPlayerState : IPlayerSpellState
+    {
+        public void OnStart(PlayerManager player)
+        {
+            if(player.DebugActive) Debug.Log("New Spell: <b>[Invisibility]</b>");
+            player.FireWall.SetActive(true);
+        }
+        public void OnUpdate(PlayerManager player) { }
+        public void OnAttack(PlayerManager player) { }
+        public void OnDamaged(PlayerManager player, int damage) { }
+        public void OnEnd(PlayerManager player) { }
+    }
+    
+    public class EldritchPlayerState : IPlayerSpellState
+    {
+        public void OnStart(PlayerManager player)
+        {
+            if(player.DebugActive) Debug.Log("New Spell: <b>[Eldritch Blast]</b>");
+        }
+        public void OnUpdate(PlayerManager player) { }
+        public void OnAttack(PlayerManager player) { }
+        public void OnDamaged(PlayerManager player, int damage) { }
+        public void OnEnd(PlayerManager player) { }
+    }
+    
+    public class HealingWordPlayerState : IPlayerSpellState
+    {
+        public void OnStart(PlayerManager player)
+        {
+            if(player.DebugActive) Debug.Log("New Spell: <b>[Eldritch Blast]</b>");
+        }
+        public void OnUpdate(PlayerManager player) { }
+        public void OnAttack(PlayerManager player) { }
+        public void OnDamaged(PlayerManager player, int damage) { }
+        public void OnEnd(PlayerManager player) { }
+    }
+    
 }
