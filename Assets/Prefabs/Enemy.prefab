@@ -68,6 +68,7 @@ MonoBehaviour:
   CurrentTarget: {fileID: 0}
   CurrentHealth: 0
   IsAlive: 1
+  Collider: {fileID: 0}
 --- !u!65 &5477521274505257534
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -209,6 +210,10 @@ PrefabInstance:
     - target: {fileID: -8391222552659086748, guid: a447f851971bf224cbb4250682777491, type: 3}
       propertyPath: m_Name
       value: Skelly
+      objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: a447f851971bf224cbb4250682777491, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8118414808184647018, guid: a447f851971bf224cbb4250682777491, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

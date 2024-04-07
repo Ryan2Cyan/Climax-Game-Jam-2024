@@ -23,7 +23,9 @@ namespace Player
             var movementVector = InputManager.Instance.Movement * (Speed * Time.deltaTime);
             var desiredPosition = new Vector3(playerPosition.x + movementVector.x, playerPosition.y, playerPosition.z + movementVector.y);
             transform.position = Vector3.SmoothDamp(playerPosition, desiredPosition, ref _velocity, Smoothing * Time.deltaTime);
-            
+
+            var balthazar = PlayerManager.Instance.Balthazar.transform;
+            balthazar.rotation = Quaternion.Slerp(balthazar.rotation, Quaternion.LookRotation(new Vector3(movementVector.x, 0f, movementVector.y)), 1f * Time.deltaTime);
             PlayerManager.Instance.BalthazarAnimator.SetBool(Running, movementVector != Vector2.zero);
         }
 

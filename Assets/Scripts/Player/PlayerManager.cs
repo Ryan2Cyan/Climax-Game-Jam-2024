@@ -9,17 +9,20 @@ namespace Player
     public class PlayerManager : MonoBehaviour
     {
         public static PlayerManager Instance;
-        
+
         [Header("Components")] 
+        public Rigidbody Rigidbody;
         public Transform MeleeCentre;
         public List<GameObject> Ghosts = new();
         public PlayerCamera PlayerCameraScript;
         public Animator BalthazarAnimator;
+        public GameObject Balthazar;
         [HideInInspector] public Animator Animator;
         [HideInInspector] public CursorWorldRaycast CursorWorldRaycastScript;
         
         [Header("Spell Components")]
         public GameObject FireWall;
+        public GameObject FireEldritchBlast;
         
         [Header("Player Settings")]
         public Material DamagedMaterial;
@@ -54,6 +57,8 @@ namespace Player
         // Player states:
         private readonly ArcaneWeaponPlayerState _arcaneWeapon = new();
         private readonly FireWallPlayerState _fireWall = new();
+        private readonly EldritchPlayerState _eldritchBlast = new();
+        private readonly InvisibilityPlayerState _invisibility = new();
         
         #region UnityFunctions
 
@@ -74,9 +79,11 @@ namespace Player
 
         private void Update()
         {
+            Rigidbody.velocity = Vector3.zero;
             if (GameplayManager.Instance.Paused) return;
             _currentState.OnUpdate(this);
             CursorWorldRaycastScript.GetCursorDirection();
+            
         }
 
         private void OnEnable()
@@ -105,7 +112,7 @@ namespace Player
             var gettingNewSpell = true;
             while (gettingNewSpell)
             {
-                var random = Random.Range(0, 2);
+                var random = Random.Range(0, 4);
                 switch (random)
                 {
                     case 0:
@@ -119,6 +126,18 @@ namespace Player
                     {
                         if(_currentState == _fireWall) continue;
                         ChangeState(_fireWall);
+                        gettingNewSpell = false;
+                    } break;
+                    case 2:
+                    {
+                        if(_currentState == _eldritchBlast) continue;
+                        ChangeState(_eldritchBlast);
+                        gettingNewSpell = false;
+                    } break;
+                    case 3:
+                    {
+                        if(_currentState == _invisibility) continue;
+                        ChangeState(_invisibility);
                         gettingNewSpell = false;
                     } break;
                 }
