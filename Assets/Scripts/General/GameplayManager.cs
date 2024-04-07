@@ -8,6 +8,8 @@ namespace General
     {
         public static GameplayManager Instance;
         public GameplayState StartingState;
+        public float SpellChangeInterval;
+        public float SpellChangeTimer;
         public bool Paused;
         public bool DebugActive;
 
@@ -61,6 +63,12 @@ namespace General
         private void OnDisable()
         {
             InputManager.OnPause -= OnPause;
+        }
+
+        private void Update()
+        {
+            if (Paused) return;
+            _currentState.OnUpdate(this);
         }
 
         #endregion

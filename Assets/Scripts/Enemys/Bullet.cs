@@ -26,7 +26,12 @@ namespace Enemys
 
             if (!(Vector3.Distance(PlayerManager.Instance.transform.position, transform.position) < Radius)) return;
             PlayerManager.Instance.OnDamaged(Damage);
-            EnemyManager.Instance.BulletPool.ReleasePooledObject(this); ;
+            EnemyManager.Instance.BulletPool.ReleasePooledObject(this);
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if(other.gameObject.CompareTag("FireWall")) EnemyManager.Instance.BulletPool.ReleasePooledObject(this);
         }
 
         #endregion

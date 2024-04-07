@@ -44,4 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c73cff950a7ce7c4cb5572b74d2f3c20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StartingState: 4
+  SpellChangeInterval: 20
+  SpellChangeTimer: 0
   Paused: 0
+  DebugActive: 0

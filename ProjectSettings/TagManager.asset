@@ -9,6 +9,7 @@ TagManager:
   - SpawnPoints
   - ExplosionRadius
   - RangedRadius
+  - FireWall
   layers:
   - Default
   - TransparentFX

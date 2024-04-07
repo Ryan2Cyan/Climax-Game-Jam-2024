@@ -14,13 +14,13 @@ namespace Player
 
     public class ArcaneWeaponPlayerState : IPlayerSpellState
     {
-        private const int _damageOnHit = 10;
         private float _cooldownTimer;
 
         private static readonly int ArcaneWeapon = Animator.StringToHash("ArcaneWeapon");
         
         public void OnStart(PlayerManager player)
         {
+            if(player.DebugActive) Debug.Log("New Spell: <b>[Arcane Weapon]</b>");
             _cooldownTimer = player.ArcaneWeaponCooldown;
         }
 
@@ -37,14 +37,13 @@ namespace Player
             {
                 var distance = Vector3.Distance(enemy.transform.position, player.MeleeCentre.position);
                 if (distance > player.MeleeRadius) continue;
-                enemy.OnDamage(_damageOnHit);
+                enemy.OnDamage(player.ArcaneWeaponDamage);
             }
             _cooldownTimer = player.ArcaneWeaponCooldown;
         }
 
         public void OnDamaged(PlayerManager player, int damage)
         {
-            Debug.Log("Player Damaged");
             player.CurrentHealth -= damage;
             if (player.CurrentHealth <= 0) player.OnDeath();
             else
@@ -57,6 +56,32 @@ namespace Player
         public void OnEnd(PlayerManager player)
         {
       
+        }
+    }
+    
+    public class FireWallPlayerState : IPlayerSpellState
+    {
+        public void OnStart(PlayerManager player)
+        {
+            if(player.DebugActive) Debug.Log("New Spell: <b>[Fire Wall]</b>");
+            player.FireWall.SetActive(true);
+        }
+        public void OnUpdate(PlayerManager player) { }
+        public void OnAttack(PlayerManager player) { }
+        public void OnDamaged(PlayerManager player, int damage)
+        {
+            player.CurrentHealth -= damage;
+            if (player.CurrentHealth <= 0) player.OnDeath();
+            else
+            {
+                player.StartCoroutine(player.DamageShaderSwap(player.DamagedCooldown));
+                player.StartCoroutine(player.IFrames());
+            }
+        }
+
+        public void OnEnd(PlayerManager player)
+        {
+            player.FireWall.SetActive(false);
         }
     }
     

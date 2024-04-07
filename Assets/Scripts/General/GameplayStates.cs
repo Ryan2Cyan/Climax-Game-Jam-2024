@@ -61,6 +61,7 @@ namespace General
         {
             if(gameplayManager.DebugActive) Debug.Log("Gameplay State: <b>Start</b>");
             SceneManager.ChangeScene(SceneManager.Scene.Game);
+            gameplayManager.SpellChangeTimer = gameplayManager.SpellChangeInterval;
         }
 
         public void OnUpdate(GameplayManager gameplayManager) { }
@@ -89,14 +90,26 @@ namespace General
         {
             if(gameplayManager.DebugActive) Debug.Log("Gameplay State: <b>Playing</b>");
             WaveManager.Instance.ToggleActive(true);
+            UIManager.Instance.Open();
         }
 
-        public void OnUpdate(GameplayManager gameplayManager) { }
+        public void OnUpdate(GameplayManager gameplayManager)
+        {
+            if (gameplayManager.SpellChangeTimer <= 0)
+            {
+                // Change Spell:
+                PlayerManager.Instance.ChangeSpell();
+                gameplayManager.SpellChangeTimer = gameplayManager.SpellChangeInterval;
+            }
+            else gameplayManager.SpellChangeTimer -= Time.deltaTime;
+            UIManager.Instance.SpellCountDown.text = ((int)gameplayManager.SpellChangeTimer).ToString();
+        }
 
         public void OnEnd(GameplayManager gameplayManager)
         {
             PlayerManager.Instance.PlayerCameraScript.enabled = true;
             WaveManager.Instance.ToggleActive(false);
+            UIManager.Instance.Close();
         }
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode mode) { }
