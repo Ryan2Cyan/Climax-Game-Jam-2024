@@ -27,9 +27,12 @@ namespace Enemys
         public float DespawnTime;
         public bool EnableDebug = true;
 
+        [Header("Components")]
+        public SkinnedMeshRenderer MeshRenderer;
+        public Animator Animator;
+        
         [HideInInspector] public Vector3 MoveVector;
         [HideInInspector] public Transform CurrentTarget;
-        [HideInInspector] public MeshRenderer MeshRenderer;
         [HideInInspector] public float CurrentHealth;
         public bool IsAlive = true;
         
@@ -48,7 +51,8 @@ namespace Enemys
         
         // States:
         private IEnemyState _currentState;
-        
+        private static readonly int Running = Animator.StringToHash("Running");
+
         #region UnityFunctions
         
         private void Update()
@@ -79,7 +83,7 @@ namespace Enemys
             CurrentTarget = PlayerManager.Instance.transform;
             
             // Create a new instance of mesh renderer's material:
-            MeshRenderer = GetComponent<MeshRenderer>();
+            MeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
             var material = MeshRenderer.material;
             MeshRenderer.material = new Material(material);
             IsAlive = true;
@@ -102,6 +106,7 @@ namespace Enemys
 
             _collider.enabled = false;
             _rigidbody.velocity = Vector3.zero;
+            Animator.SetBool(Running, true);
         }
         
         public void Release()

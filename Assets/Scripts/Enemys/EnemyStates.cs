@@ -24,10 +24,13 @@ namespace Enemys
     
    public class MoveEnemyState : IEnemyState
    {
-       private const float _attackRadius = 1.5f;
+        private const float _attackRadius = 1.5f;
+        private static readonly int Running = Animator.StringToHash("Running");
+        
         public void OnStart(Enemy enemy)
         {
            if(enemy.EnableDebug) Debug.Log("Enemy (" + enemy.gameObject.name + "): <b>[Move]</b>");
+           enemy.Animator.SetBool(Running, true);
         }
 
        public void OnUpdate(Enemy enemy)
@@ -64,7 +67,10 @@ namespace Enemys
            }
        }
 
-       public void OnEnd(Enemy enemy){ }
+       public void OnEnd(Enemy enemy)
+       {
+           enemy.Animator.SetBool(Running, false);
+       }
    }
    
    public class AttackEnemyState : IEnemyState
@@ -100,7 +106,7 @@ namespace Enemys
        
        public void OnStart(Enemy enemy)
        {
-            if (enemy.EnableDebug) Debug.Log("Enemy (" + enemy.gameObject.name + "): Death");
+           if(enemy.EnableDebug) Debug.Log("Enemy (" + enemy.gameObject.name + "): <b>[Death]</b>");
             enemy.IsAlive = false;
             _timer = enemy.DespawnTime;
             enemy.MeshRenderer.material = enemy.DamagedMaterial;

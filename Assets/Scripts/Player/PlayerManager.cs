@@ -26,6 +26,7 @@ namespace Player
         public float DamagedCooldown = 0.25f;
         public float IFrameDuration;
         public int MaxHealth = 200;
+        public bool DebugActive;
         
         [Header("Arcane Weapon")]
         public int ArcaneWeaponDamage;
@@ -49,6 +50,7 @@ namespace Player
         
         // Player states:
         private readonly ArcaneWeaponPlayerState _arcaneWeapon = new();
+        private readonly FireWallPlayerState _fireWall = new();
         
         #region UnityFunctions
 
@@ -91,6 +93,31 @@ namespace Player
             _currentState.OnEnd(this);
             _currentState = state;
             _currentState.OnStart(this);
+        }
+
+        public void ChangeSpell()
+        {
+            var gettingNewSpell = true;
+            while (gettingNewSpell)
+            {
+                var random = Random.Range(0, 2);
+                switch (random)
+                {
+                    case 0:
+                    {
+                        if(_currentState == _arcaneWeapon) continue;
+                        ChangeState(_arcaneWeapon);
+                        gettingNewSpell = false;
+                    }
+                        break;
+                    case 1:
+                    {
+                        if(_currentState == _fireWall) continue;
+                        ChangeState(_fireWall);
+                        gettingNewSpell = false;
+                    } break;
+                }
+            }
         }
 
         public void OnDamaged(int damage)

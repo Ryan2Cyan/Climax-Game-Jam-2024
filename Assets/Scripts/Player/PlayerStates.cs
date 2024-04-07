@@ -20,6 +20,7 @@ namespace Player
         
         public void OnStart(PlayerManager player)
         {
+            if(player.DebugActive) Debug.Log("New Spell: <b>[Arcane Weapon]</b>");
             _cooldownTimer = player.ArcaneWeaponCooldown;
         }
 
@@ -62,6 +63,7 @@ namespace Player
     {
         public void OnStart(PlayerManager player)
         {
+            if(player.DebugActive) Debug.Log("New Spell: <b>[Fire Wall]</b>");
             player.FireWall.SetActive(true);
         }
         public void OnUpdate(PlayerManager player) { }
